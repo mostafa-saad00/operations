@@ -31,12 +31,20 @@
                     </x-nav-link>
                 </div>
 
+                
+                @if(App\Models\Officer::all()->count() > 0)
+                    <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                        <x-nav-link :href="route('index-fromtooperations')" :active="request()->routeIs('index-fromtooperations') || request()->routeIs('create-fromtooperation')">
+                            {{ __('التشغيل الاسبوعي') }}
+                        </x-nav-link>
+                    </div>
+                @endif
+
                 <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                    <x-nav-link :href="route('index-fromtooperations')" :active="request()->routeIs('index-fromtooperations') || request()->routeIs('create-fromtooperation')">
-                        {{ __('التشغيل الاسبوعي') }}
+                    <x-nav-link :href="route('index-pistols')" :active="request()->routeIs('index-pistols') || request()->routeIs('create-pistol') || request()->routeIs('edit-pistol')">
+                        {{ __('الطبنجات') }}
                     </x-nav-link>
                 </div>
-
             </div>
 
             <!-- Settings Dropdown -->

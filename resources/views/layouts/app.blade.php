@@ -17,6 +17,7 @@
         <link rel="stylesheet" href="{{ asset('/css/bootstrap-icons.css') }}">
 
 
+
         <!-- jquery -->
         <link rel="stylesheet" href="{{ asset('/css/jquery-ui.css') }}">
         <script src="{{ asset('/js/jquery-1.12.4.js') }}"></script>

@@ -12,4 +12,9 @@ class Weeklyofficeroperation extends Model
     protected $table = "weeklyofficeroperations";
 
     protected $guarded = [];
+
+    public function officer()
+    {
+        return $this->belongsTo(Officer::class);
+    }
 }

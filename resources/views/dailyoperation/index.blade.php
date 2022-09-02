@@ -23,6 +23,7 @@
                       <tr>
                         <th scope="col">#</th>
                         <th scope="col">التشغيل</th>
+                        <th scope="col">نوع التشغيل</th>
                         <th scope="col">الحالة</th>
                         <th scope="col">تعديل</th>
                         <th scope="col">حذف</th>
@@ -30,10 +31,14 @@
                     </thead>
                     <tbody>
                         <div style="display: none">{{ $id = 1 }}</div>
-                        @forelse($dailyoperations as $dailyoperation)  
+                        @forelse($dailyoperations as $dailyoperation)
+                            @if($dailyoperation->type == "تواجد مسائي" || $dailyoperation->type == "راحة اسبوعية" || $dailyoperation->type == "راحة تعويضية" || $dailyoperation->type == "راحة خدمة" || $dailyoperation->type == "اجازات" || $dailyoperation->type == "مرضي" || $dailyoperation->type == "مامورية سيناء" || $dailyoperation->type == "راحة مامورية سيناء" || $dailyoperation->type == "انتداب" || $dailyoperation->type == "فرق" || $dailyoperation->type == "عمل عادي" || $dailyoperation->type == "مبيت بالقطاع")  
+                            
+                            @else
                             <tr>
                                 <th scope="row">{{ $id++ }}</th>
                                 <td>{{ $dailyoperation->name }}</td>
+                                <td>{{ $dailyoperation->type }}</td>
                                 <td>@if($dailyoperation->status == 'active') مفعلة @else غير مفعلة @endif</td>
                                 <td>
                                     <a href="{{ route('edit-dailyoperation', $dailyoperation->id) }}" class="btn btn-outline-primary">تعديل</a>
@@ -46,7 +51,7 @@
                                     </form>
                                 </td>
                             </tr>
-
+                            @endif
                         @empty
                             <tr>
                                 <td>لا يوجد بيانات</td>

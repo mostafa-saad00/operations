@@ -13,16 +13,13 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('weeklyofficeroperations', function (Blueprint $table) {
+        Schema::create('pistols', function (Blueprint $table) {
             $table->id();
 
-            $table->unsignedInteger('officer_id');
-            $table->unsignedInteger('fromtooperation_id');
-            $table->unsignedInteger('dailyoperation_id');
-            $table->string('day');
+            $table->string('type');
+            $table->string('number');
 
             $table->timestamps();
-
         });
     }
 
@@ -33,6 +30,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('weeklyofficeroperations');
+        Schema::dropIfExists('pistols');
     }
 };

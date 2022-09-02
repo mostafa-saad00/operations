@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Dailyoperation;
 use App\Http\Requests\DailyoperationFormRequest;
-
+use App\Models\Fromtooperation;
+use App\Models\Weeklyofficeroperation;
+use App\Models\Gehat;
 
 class DailyoperationController extends Controller
 {
@@ -26,6 +28,7 @@ class DailyoperationController extends Controller
 
         $dailyoperation = Dailyoperation::create([
             'name' => $data['name'],
+            'type' => $data['type'],
         ]);
 
         return redirect('/create-dailyoperation')->with('message', 'تم اضافة تشغيل بنجاح');
@@ -42,6 +45,7 @@ class DailyoperationController extends Controller
 
         $dailyoperation = Dailyoperation::where('id', $dailyoperation->id)->update([
             'name' => $data['name'],
+            'type' => $data['type'],
             'status' => $request->status,
         ]);
 
@@ -53,5 +57,12 @@ class DailyoperationController extends Controller
         $dailyoperation->delete();
         return redirect('/dailyoperations')->with('message', 'تم حذف التشغيل بنجاح');
 
+    }
+
+    public function table(Fromtooperation $fromtooperation, $day)
+    {
+        $gehats = Gehat::all();
+        $weeklyOfficerOperations = Weeklyofficeroperation::where('fromtooperation_id', $fromtooperation->id)->where('day', $day)->get();
+        return view('dailyoperation.table', compact('gehats', 'weeklyOfficerOperations'));
     }
 }

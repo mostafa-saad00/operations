@@ -25,6 +25,8 @@
                         <th scope="col">#</th>
                         <th scope="col">من السبت الموافق</th>
                         <th scope="col">الي الجمعة الموافق</th>
+                        <th scope="col">الجدول الاسبوعي</th>
+                        <th scope="col">اليومية</th>
                         <th scope="col">تعديل</th>
                         <th scope="col">حذف</th>
                         </tr>
@@ -36,6 +38,18 @@
                                 <th scope="row">{{ $id++ }}</th>
                                 <td>{{ $fromtooperation->from }}</td>
                                 <td>{{ $fromtooperation->to }}</td>
+                                <td>
+                                    <a href="{{ route('table-fromtooperation', $fromtooperation->id) }}" class="btn btn-outline-warning">جدول التشغيل الاسبوعي</a>
+                                </td>
+                                <td>
+                                    <a href="{{ route('table-dailyoperation', [$fromtooperation->id, 'sat']) }}" class="btn btn-outline-dark">السبت</a>
+                                    <a href="{{ route('table-dailyoperation', [$fromtooperation->id, 'sun']) }}" class="btn btn-outline-dark">الاحد</a>
+                                    <a href="{{ route('table-dailyoperation', [$fromtooperation->id, 'mon']) }}" class="btn btn-outline-dark">الاثنين</a>
+                                    <a href="{{ route('table-dailyoperation', [$fromtooperation->id, 'tue']) }}" class="btn btn-outline-dark">الثلاثلاء</a>
+                                    <a href="{{ route('table-dailyoperation', [$fromtooperation->id, 'wed']) }}" class="btn btn-outline-dark">الاربعاء</a>
+                                    <a href="{{ route('table-dailyoperation', [$fromtooperation->id, 'thu']) }}" class="btn btn-outline-dark">الخميس</a>
+                                    <a href="{{ route('table-dailyoperation', [$fromtooperation->id, 'fri']) }}" class="btn btn-outline-dark">الجمعة</a>
+                                </td>
                                 <td>
                                     <a href="{{ route('index-weeklyofficeroperations', $fromtooperation->id) }}" class="btn btn-outline-primary">التشغيل الاسبوعي للضباط</a>
                                 </td>

@@ -34,6 +34,17 @@
                     </div>
 
                     <div class="py-2">
+                        <x-label for="nick_name" :value="__('نوع الخدمة')" />
+
+                        <select name="type"
+                        class="form-select s mb-3">  
+
+                            <option @if($dailyoperation->type == "خدمة عادية") selected @endif value="خدمة عادية">خدمة عادية</option>        
+                            <option @if($dailyoperation->type == "خدمة طائة") selected @endif value="خدمة طائة">خدمة طائة</option>        
+                        </select>
+                    </div>
+
+                    <div class="py-2">
                         <x-label for="name" :value="__('الحالة')" />
         
                         <select class="form-control" name="status">
