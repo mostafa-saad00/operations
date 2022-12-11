@@ -32,4 +32,11 @@ class Officer extends Model
     {
         return $this->hasMany(Weeklyofficeroperation::class);
     }
+
+    public function photo()
+    {
+        return $this->hasOne(Photo::class);
+    }
+
+    
 }

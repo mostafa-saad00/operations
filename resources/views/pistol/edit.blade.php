@@ -33,10 +33,12 @@
 
                         <select name="type"
                         class="form-select s mb-3">      
-                            <option>اختر النوع</option>         
+                            <option value="">اختر النوع</option>         
                             <option @if($pistol->type == "هيكلر") selected @endif value="هيكلر">هيكلر</option>         
                             <option @if($pistol->type == "برتا") selected @endif value="برتا">برتا</option>         
-                            <option @if($pistol->type == "CZ") selected @endif value="CZ">CZ</option>         
+                            <option @if($pistol->type == "ديوتي") selected @endif value="ديوتي">ديوتي</option>         
+                            <option @if($pistol->type == "كومباكت") selected @endif value="كومباكت">كومباكت</option>         
+                            <option @if($pistol->type == "تورس") selected @endif value="تورس">تورس</option>        
                                 
                         </select>
                     </div>

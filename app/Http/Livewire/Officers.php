@@ -2,19 +2,22 @@
 
 namespace App\Http\Livewire;
 
-use App\Models\Officer;
 use App\Models\Gehat;
 use App\Models\Pistol;
+use App\Models\Officer;
 use Livewire\Component;
 use Livewire\WithPagination;
 
 class Officers extends Component
 {
+    use WithPagination;
+
     public $search;
     public $searchTerm;
     public $gehats;
     public $pistols;
     public $algeha;
+    public $records;
     
 
     public function mount()
@@ -41,11 +44,11 @@ class Officers extends Component
                     ->orWhere('health', 'LIKE', $searchTerm)
                     ->orderBy('year_of_graduate', 'ASC')
                     ->orderBy('tarteb', 'ASC')
-                    ->get();
+                    ->paginate($this->records);
 
         if($this->algeha != '')   
         {
-            $officers = $officers->where('gehat_id', 'LIKE',  $this->algeha);     
+            $officers = Officer::where('gehat_id', 'LIKE',  $this->algeha)->paginate($this->records);
         }             
 
 

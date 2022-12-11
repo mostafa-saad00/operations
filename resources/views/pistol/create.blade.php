@@ -36,8 +36,10 @@
                             <option>اختر النوع</option>         
                             <option value="هيكلر">هيكلر</option>         
                             <option value="برتا">برتا</option>         
-                            <option value="CZ">CZ</option>         
-                                
+                            <option value="ديوتي">ديوتي</option>         
+                            <option value="كومباكت">كومباكت</option>         
+                            <option value="تورس">تورس</option>         
+    
                         </select>
                     </div>
 

@@ -37,7 +37,9 @@ class OfficerFormRequest extends FormRequest
             'religion' => 'required|max:255',
             'status' => 'required|max:255',
             'phone1' => 'required|numeric',
+            'phone2' => '',
             'health' => 'required|max:255',
+            'profile_picture' => '',
         ];
     }
 

@@ -14,21 +14,14 @@
 
             <!-- Name -->
             <div>
-                <x-label for="name" :value="__('Name')" />
+                <x-label for="name" :value="__('اسم المستخدم')" />
 
                 <x-input id="name" class="block mt-1 w-full" type="text" name="name" :value="old('name')" required autofocus />
             </div>
 
-            <!-- Email Address -->
-            <div class="mt-4">
-                <x-label for="email" :value="__('Email')" />
-
-                <x-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required />
-            </div>
-
             <!-- Password -->
             <div class="mt-4">
-                <x-label for="password" :value="__('Password')" />
+                <x-label for="password" :value="__('الرقم السري')" />
 
                 <x-input id="password" class="block mt-1 w-full"
                                 type="password"
@@ -38,20 +31,31 @@
 
             <!-- Confirm Password -->
             <div class="mt-4">
-                <x-label for="password_confirmation" :value="__('Confirm Password')" />
+                <x-label for="password_confirmation" :value="__('تأكيد الرقم السري')" />
 
                 <x-input id="password_confirmation" class="block mt-1 w-full"
                                 type="password"
                                 name="password_confirmation" required />
             </div>
 
-            <div class="flex items-center justify-end mt-4">
-                <a class="underline text-sm text-gray-600 hover:text-gray-900" href="{{ route('login') }}">
-                    {{ __('Already registered?') }}
-                </a>
+            <label class="block mt-4">
+                <x-label for="role" :value="__('الصلاحيات')" />
+                <select
+                  name="role"
+                  class="form-select mt-1.5 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:bg-navy-700 dark:hover:border-navy-400 dark:focus:border-accent"
+                >
+                  <option value="admin">صلاحية كاملة</option>
+                  <option value="entry">ادخال البيانات</option>
+                  <option value="editor">تعديل البيانات</option>
+                  <option value="editor_entry">تعديل وادخال البيانات</option>
+                </select>
+            </label>
 
+
+            <div class="flex items-center justify-end mt-4">
+            
                 <x-button class="ml-4">
-                    {{ __('Register') }}
+                    {{ __('انشاء مستخدم جديد') }}
                 </x-button>
             </div>
         </form>

@@ -37,14 +37,16 @@
 
                         <select name="type"
                         class="form-select s mb-3">  
-
                             <option value="خدمة عادية">خدمة عادية</option>        
                             <option value="خدمة طائة">خدمة طائة</option>        
-                                   
-                               
+                            <option value="مأمورية خارجية">مأمورية خارجية</option>
                         </select>
                     </div>
 
+                    <div class="py-2">
+                        <x-label for="price" :value="__('نجدات الاهداف')" />
+                        <x-input id="price" class="block mt-1 w-full" type="number" name="price" :value="old('price')" />
+                    </div>
 
 
                     <x-button class="ml-3">

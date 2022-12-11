@@ -5,15 +5,21 @@ namespace App\Http\Livewire;
 use App\Models\Fromtooperation;
 use Livewire\Component;
 use App\Models\Officer;
+use App\Models\Weeklyofficeroperation;
+use App\Models\Dailyoperation;
 
 class Weeklyofficeroperations extends Component
 {
     public $searchTerm;
     public $fromtooperation;
+    public $weeklyofficeroperations;
+    public $dailyoperations;
 
     public function mount($fromtooperation)
     {
+        $this->dailyoperations = Dailyoperation::all();
         $this->fromtooperation = Fromtooperation::find($fromtooperation);
+        $this->weeklyofficeroperations = Weeklyofficeroperation::where('fromtooperation_id', $fromtooperation)->get();
     }
 
     public function render()

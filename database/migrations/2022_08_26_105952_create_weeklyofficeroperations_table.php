@@ -20,6 +20,9 @@ return new class extends Migration
             $table->unsignedInteger('fromtooperation_id');
             $table->unsignedInteger('dailyoperation_id');
             $table->string('day');
+            $table->date('date')->nullable();
+            $table->unsignedInteger('month')->nullable();
+            $table->unsignedInteger('year')->nullable();
 
             $table->timestamps();
 

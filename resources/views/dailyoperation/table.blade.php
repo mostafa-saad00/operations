@@ -12,10 +12,16 @@
         
     </x-slot>
 
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="py-4 px-4 bg-white overflow-hidden shadow-sm sm:rounded-lg">
+    <style>
+        .my-table tr { line-height: 14px; }
+    </style>
 
+    <div class="py-12">
+        
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            <div id="printDiv" class="py-4 px-4 bg-white overflow-hidden shadow-sm sm:rounded-lg print">
+                
+                <button class="btn btn-danger float-left" id="print_button" onclick="printDiv()">طباعة</button>
 
                 <div class="container">
                     <div class="row">
@@ -24,8 +30,8 @@
                         <div style="display: none">{{ $id = 1 }}</div>
                             <div class="col-6">
                                 <div class="p-3 mb-2 bg-dark text-white text-center"> {{ $gehat->name }} ( {{ $gehat->officers()->count() }} ضابط ) </div>
-                                <table class="table table-light table-bordered border-dark">  
-                                    <thead>
+                                <table class="table table-light table-bordered border-dark my-table">  
+                                    <thead> 
                                     <tr>
                                         <th  scope="row">م</th>                
                                         <th  scope="row">الرتبة</th>                
@@ -77,6 +83,20 @@
             </div>
         </div>
     </div>
+
+
+    <script>
+        function printDiv()
+        {
+
+            var printContent = document.getElementById('printDiv').innerHTML;
+            var originalContent = document.body.innerHTML;
+            document.body.innerHTML = printContent;
+            window.print();
+
+            
+        }
+    </script>
 
 
 </x-app-layout>    

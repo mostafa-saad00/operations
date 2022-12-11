@@ -23,7 +23,7 @@ class PistolController extends Controller
             'number' => $data['number'],
         ]);
 
-        return redirect()->route('create-pistol');
+        return redirect()->route('index-pistols')->with('message', 'تم اضافة طبنجة بنجاح');
     }
 
     public function edit(Pistol $pistol)

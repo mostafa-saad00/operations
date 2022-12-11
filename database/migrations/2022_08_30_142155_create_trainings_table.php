@@ -17,6 +17,8 @@ return new class extends Migration
             $table->id();
 
             $table->string('name');
+            $table->string('place')->nullable();
+            $table->unsignedInteger('year')->nullable();
 
             $table->timestamps();
         });

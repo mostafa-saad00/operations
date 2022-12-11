@@ -22,7 +22,38 @@
     </x-slot>
 
     <script>
+        
+
         $( function() {
+
+          
+
+          $( "#dp" ).datepicker({
+            dateformat: "yy-mm-dd",
+            inline: true,
+            numberOfmonths: [1, 2],
+            dayNamesMin: ['Sat', 'Sun','Mon','Tue','Wed','Thu','Fri'],
+            beforeShowDay: function(date) {
+                var day = date.getDay();
+                if(day == 6)
+                    return [0]; 
+                if(day == 5)
+                    return [0];
+                if(day == 4)
+                    return [0];   
+                if(day == 3)
+                    return [0]; 
+                if(day == 2)
+                    return [0];  
+                if(day == 1) 
+                    return [0]; 
+                else 
+                    return [1];      
+            }
+          });
+          
+
+
           $( "#datepicker" ).datepicker();
           $( "#datepicker" ).datepicker( "option", "dateFormat", "yy-mm-dd" );
           $( "#datepicker2" ).datepicker();
@@ -41,7 +72,7 @@
                         <div class="row">
                             <div class="col">
                                 <x-label for="name" class="mb-2" :value="__('من تاريخ')" />
-                                <input id="datepicker" name="from" type="text" class="form-control" placeholder="اختر التاريخ من هنا">
+                                <input id="dp" name="from" type="text" class="form-control" placeholder="اختر التاريخ من هنا">
                             </div>
                             <div class="col">
                                 <x-label for="name" class="mb-2" :value="__('الي تاريخ')" />

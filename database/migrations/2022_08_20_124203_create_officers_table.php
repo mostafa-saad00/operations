@@ -33,6 +33,10 @@ return new class extends Migration
             $table->string('phone2')->nullable();
 
             $table->string('health');
+
+            $table->unsignedInteger('height')->nullable();
+            $table->unsignedInteger('weight')->nullable();
+            $table->bigInteger('age')->nullable();
             
 
             $table->timestamps();

@@ -28,4 +28,12 @@ class PistolFormRequest extends FormRequest
             'number' => ['required'],
         ];
     }
+
+    public function messages()
+{
+    return [
+        'type.required' => 'لم يتم ادخال نوع الطبنجة',
+        'number.required' => 'لم يتم ادخال رقم الطبنجة',
+    ];
+}
 }

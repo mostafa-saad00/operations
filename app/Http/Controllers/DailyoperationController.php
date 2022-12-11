@@ -25,13 +25,22 @@ class DailyoperationController extends Controller
     public function store(DailyoperationFormRequest $request)
     {
         $data = $request->validated();
+        if ($data['price'])
+        {
+            $operation_price = $data['price'];
+        }
+        else
+        {
+            $operation_price = 0;
+        }
 
         $dailyoperation = Dailyoperation::create([
             'name' => $data['name'],
             'type' => $data['type'],
+            'price' => $operation_price,
         ]);
 
-        return redirect('/create-dailyoperation')->with('message', 'تم اضافة تشغيل بنجاح');
+        return redirect('/dailyoperations')->with('message', 'تم اضافة خدمة بنجاح');
     }
 
     public function edit(Dailyoperation $dailyoperation)
@@ -49,13 +58,13 @@ class DailyoperationController extends Controller
             'status' => $request->status,
         ]);
 
-        return redirect('/dailyoperations')->with('message', 'تم تعديل تشغيل بنجاح');
+        return redirect('/dailyoperations')->with('message', 'تم تعديل خدمة بنجاح');
     }
 
     public function destroy(Dailyoperation $dailyoperation)
     {
         $dailyoperation->delete();
-        return redirect('/dailyoperations')->with('message', 'تم حذف التشغيل بنجاح');
+        return redirect('/dailyoperations')->with('message', 'تم حذف الخدمة بنجاح');
 
     }
 

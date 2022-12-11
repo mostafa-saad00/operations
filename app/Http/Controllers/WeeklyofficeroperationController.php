@@ -23,6 +23,8 @@ class WeeklyofficeroperationController extends Controller
 
         
         $weeklyoperations = Weeklyofficeroperation::where('officer_id', $officer->id)->where('fromtooperation_id', $fromtooperation->id)->get();
+         
+        
         foreach($weeklyoperations as $weeklyoperation)
         {
             $query = Weeklyofficeroperation::find($weeklyoperation->id);
@@ -36,7 +38,10 @@ class WeeklyofficeroperationController extends Controller
                 'officer_id' => $officer->id,
                 'fromtooperation_id' => $fromtooperation->id,
                 'dailyoperation_id' => $satoperation['dailyoperation_id'],
-                'day' => 'sat'
+                'day' => 'sat',
+                'date' => date('Y-m-d', strtotime($fromtooperation->from. ' + 0 day')),
+                'month' => date('m', strtotime($fromtooperation->from. ' + 0 day')),
+                'year' => date('Y', strtotime($fromtooperation->from. ' + 0 day')),
             ]);
 
         }
@@ -48,7 +53,10 @@ class WeeklyofficeroperationController extends Controller
                 'officer_id' => $officer->id,
                 'fromtooperation_id' => $fromtooperation->id,
                 'dailyoperation_id' => $sunoperation['dailyoperation_id'],
-                'day' => 'sun'
+                'day' => 'sun',
+                'date' => date('Y-m-d', strtotime($fromtooperation->from. ' + 1 day')),
+                'month' => date('m', strtotime($fromtooperation->from. ' + 1 day')),
+                'year' => date('Y', strtotime($fromtooperation->from. ' + 1 day'))
             ]);
 
         }
@@ -60,7 +68,10 @@ class WeeklyofficeroperationController extends Controller
                 'officer_id' => $officer->id,
                 'fromtooperation_id' => $fromtooperation->id,
                 'dailyoperation_id' => $monoperation['dailyoperation_id'],
-                'day' => 'mon'
+                'day' => 'mon',
+                'date' => date('Y-m-d', strtotime($fromtooperation->from. ' + 2 day')),
+                'month' => date('m', strtotime($fromtooperation->from. ' + 2 day')),
+                'year' => date('Y', strtotime($fromtooperation->from. ' + 2 day'))
             ]);
 
         }
@@ -72,7 +83,10 @@ class WeeklyofficeroperationController extends Controller
                 'officer_id' => $officer->id,
                 'fromtooperation_id' => $fromtooperation->id,
                 'dailyoperation_id' => $tueoperation['dailyoperation_id'],
-                'day' => 'tue'
+                'day' => 'tue',
+                'date' => date('Y-m-d', strtotime($fromtooperation->from. ' + 3 day')),
+                'month' => date('m', strtotime($fromtooperation->from. ' + 3 day')),
+                'year' => date('Y', strtotime($fromtooperation->from. ' + 3 day'))
             ]);
 
         }
@@ -84,7 +98,10 @@ class WeeklyofficeroperationController extends Controller
                 'officer_id' => $officer->id,
                 'fromtooperation_id' => $fromtooperation->id,
                 'dailyoperation_id' => $wedoperation['dailyoperation_id'],
-                'day' => 'wed'
+                'day' => 'wed',
+                'date' => date('Y-m-d', strtotime($fromtooperation->from. ' + 4 day')),
+                'month' => date('m', strtotime($fromtooperation->from. ' + 4 day')),
+                'year' => date('Y', strtotime($fromtooperation->from. ' + 4 day'))
             ]);
 
         }
@@ -96,7 +113,10 @@ class WeeklyofficeroperationController extends Controller
                 'officer_id' => $officer->id,
                 'fromtooperation_id' => $fromtooperation->id,
                 'dailyoperation_id' => $thuoperation['dailyoperation_id'],
-                'day' => 'thu'
+                'day' => 'thu',
+                'date' => date('Y-m-d', strtotime($fromtooperation->from. ' + 5 day')),
+                'month' => date('m', strtotime($fromtooperation->from. ' + 5 day')),
+                'year' => date('Y', strtotime($fromtooperation->from. ' + 5 day'))
             ]);
 
         }
@@ -108,7 +128,10 @@ class WeeklyofficeroperationController extends Controller
                 'officer_id' => $officer->id,
                 'fromtooperation_id' => $fromtooperation->id,
                 'dailyoperation_id' => $frioperation['dailyoperation_id'],
-                'day' => 'fri'
+                'day' => 'fri',
+                'date' => date('Y-m-d', strtotime($fromtooperation->from. ' + 6 day')),
+                'month' => date('m', strtotime($fromtooperation->from. ' + 6 day')),
+                'year' => date('Y', strtotime($fromtooperation->from. ' + 6 day'))
             ]);
 
         }

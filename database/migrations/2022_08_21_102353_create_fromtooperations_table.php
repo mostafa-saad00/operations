@@ -18,6 +18,11 @@ return new class extends Migration
 
             $table->date('from');
             $table->date('to');
+            
+            $table->unsignedInteger('day');
+            $table->unsignedInteger('month');
+            $table->unsignedInteger('year');
+
             $table->string('refrence_number');
 
             $table->timestamps();

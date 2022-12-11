@@ -18,6 +18,7 @@ return new class extends Migration
 
             $table->string('name');
             $table->string('type');
+            $table->integer('price');
             $table->string('status')->default('active');
 
             $table->timestamps();

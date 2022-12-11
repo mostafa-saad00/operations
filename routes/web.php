@@ -6,11 +6,17 @@ use App\Http\Livewire\Pistols;
 use App\Http\Livewire\Fromtooperations;
 use App\Http\Livewire\Weeklyofficeroperations;
 use App\Http\Livewire\Createweeklyofficeroperations;
+use App\Http\Livewire\Ma2moryats;
+use App\Http\Livewire\Dailyoperations;
 use App\Http\Controllers\OfficerController;
 use App\Http\Controllers\DailyoperationController;
 use App\Http\Controllers\FromtooperationController;
 use App\Http\Controllers\WeeklyofficeroperationController;
 use App\Http\Controllers\PistolController;
+use App\Http\Controllers\TrainingController;
+use App\Http\Controllers\NagadatahdafController;
+use App\Http\Controllers\PostController;
+use App\Http\Controllers\Ma2moryatController;
 use App\Models\Officer;
 use App\Models\Gehat;
 use App\Models\Pistol;
@@ -23,8 +29,16 @@ use App\Models\Dailyoperation;
 
 
 Route::get('/', function () {
-    return view('welcome');
-});
+    return view('dashboard');
+})->middleware(['auth'])->name('dashboard');
+
+Route::get('/testview', function () {
+    return view('testview');
+})->middleware(['auth']);
+
+Route::get('/testview2', function () {
+    return view('testview2');
+})->middleware(['auth']);
 
 Route::get('/dashboard', function () {
 
@@ -132,6 +146,19 @@ Route::get('/dashboard', function () {
 })->middleware(['auth'])->name('dashboard');
 
 
+
+Route::controller(PostController::class)->middleware(['auth'])->group(function () {
+    Route::post('/store', 'store')->name('store-post');
+
+    Route::post('/tmp-upload', 'tmpUpload');
+    Route::post('/edit-officer/tmp-upload', 'tmpUpload');
+    
+    Route::delete('/tmp-delete', 'tmpDelete');
+    Route::delete('/edit-officer/tmp-delete', 'tmpDelete');
+
+});
+
+
 // Officers Routes
 Route::get('/officers', Officers::class)->middleware(['auth'])->name('index-officers');
 Route::controller(OfficerController::class)->middleware(['auth'])->group(function () {
@@ -140,6 +167,7 @@ Route::controller(OfficerController::class)->middleware(['auth'])->group(functio
     Route::get('/edit-officer/{officer}', 'edit')->name('edit-officer');
     Route::put('/update-officer/{officer}', 'update')->name('update-officer');
     Route::delete('/delete-officer/{officer}', 'destroy')->name('destroy-officer');
+    Route::get('/officer/{officer}', 'show_officer')->name('show-officer'); 
 });
 // End Officers Routes
 
@@ -155,8 +183,8 @@ Route::controller(PistolController::class)->middleware(['auth'])->group(function
 // End pistols Routes
 
 // Daily Operations Routes
+Route::get('/dailyoperations', Dailyoperations::class)->middleware(['auth'])->name('index-dailyoperations');
 Route::controller(DailyoperationController::class)->middleware(['auth'])->group(function () {
-    Route::get('/dailyoperations', 'index')->name('index-dailyoperations');
     Route::get('/create-dailyoperation', 'create')->name('create-dailyoperation');
     Route::post('/store-dailyoperation', 'store')->name('store-dailyoperation');
     Route::get('/edit-dailyoperation/{dailyoperation}', 'edit')->name('edit-dailyoperation');
@@ -164,6 +192,24 @@ Route::controller(DailyoperationController::class)->middleware(['auth'])->group(
     Route::delete('/delete-dailyoperation/{dailyoperation}', 'destroy')->name('destroy-dailyoperation');
 });
 // End Daily Operations Routes
+
+// Nagadat Ahdaf Routes
+Route::controller(NagadatahdafController::class)->middleware(['auth'])->group(function () {
+    Route::get('/nagadatahdaf', 'index')->name('index-nagadatahdaf');
+}); 
+// End Nagadat Ahdaf Routes
+
+// Daily trainings Routes
+Route::controller(TrainingController::class)->middleware(['auth'])->group(function () {
+    Route::get('/trainings', 'index')->name('index-trainings');
+    Route::get('/create-training', 'create')->name('create-training');
+    Route::post('/store-training', 'store')->name('store-training');
+    Route::get('/edit-training/{training}', 'edit')->name('edit-training');
+    Route::put('/update-training/{training}', 'update')->name('update-training');
+    Route::delete('/delete-training/{training}', 'destroy')->name('destroy-training');
+});
+// End trainings Routes
+
 
 // From To Operations Routes
 Route::get('/fromtooperations', Fromtooperations::class)->middleware(['auth'])->name('index-fromtooperations');
@@ -190,6 +236,14 @@ Route::controller(WeeklyofficeroperationController::class)->middleware(['auth'])
 Route::get('/table-dailyoperation/{fromtooperation}/{day}', [DailyoperationController::class, 'table'])->name('table-dailyoperation');
 // End Daily operation Table
 
+// Ma2moryat
+Route::get('/ma2moryats', Ma2moryats::class)->middleware(['auth'])->name('index-ma2moryats');
+Route::controller(Ma2moryatController::class)->middleware(['auth'])->group(function () {
+    Route::post('/store-ma2moryat', 'store')->name('store-ma2moryat');
+    Route::delete('/delete-ma2moryat/{ma2moryat}', 'destroy')->name('destroy-ma2moryat');
+
+});
+// End Ma2moryat
 
 
 
