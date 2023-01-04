@@ -588,15 +588,14 @@
                     @endif
 
                     @foreach ($pistols as $pistol)
-                        <option value="{{ $pistol->id }}">
+                        <option @if($officer->pistol_id == $pistol->id) selected @endif value="{{ $pistol->id }}">
                             {{ $pistol->type }} - {{ $pistol->number }} 
                         </option>
           
                     @endforeach
 
-                    @if ($officer->pistol_id == 0)
-                    <option selected value="0">بدون طبنجة</option>        
-                    @endif    
+                    <option @if($officer->pistol_id == 0) selected @endif value="0">بدون طبنجة</option>        
+                        
                     </select>
                    
                   </span>

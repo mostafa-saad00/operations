@@ -55,6 +55,7 @@ class DailyoperationController extends Controller
         $dailyoperation = Dailyoperation::where('id', $dailyoperation->id)->update([
             'name' => $data['name'],
             'type' => $data['type'],
+            'price' => $data['price'],
             'status' => $request->status,
         ]);
 

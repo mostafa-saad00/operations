@@ -294,7 +294,7 @@
                     
                     <div style="display: none">{{ $id = 1 }}</div>
                     @forelse($dailyoperations as $dailyoperation)
-                    @if($dailyoperation->type == "تواجد مسائي" || $dailyoperation->type == "راحة اسبوعية" || $dailyoperation->type == "راحة تعويضية" || $dailyoperation->type == "راحة خدمة" || $dailyoperation->type == "اجازات" || $dailyoperation->type == "مرضي" || $dailyoperation->type == "مامورية سيناء" || $dailyoperation->type == "راحة مامورية سيناء" || $dailyoperation->type == "انتداب" || $dailyoperation->type == "فرق" || $dailyoperation->type == "عمل عادي" || $dailyoperation->type == "مبيت بالقطاع")  
+                    @if($dailyoperation->type == "تواجد مسائي" || $dailyoperation->type == "راحة اسبوعية" || $dailyoperation->type == "راحة تعويضية" || $dailyoperation->type == "راحة خدمة" || $dailyoperation->name == "اجازة دوري" || $dailyoperation->type == "اجازة مرضي" || $dailyoperation->type == "اجازة طارئة" || $dailyoperation->type == "مامورية سيناء" || $dailyoperation->type == "راحة مامورية سيناء" || $dailyoperation->type == "انتداب" || $dailyoperation->type == "فرق" || $dailyoperation->type == "عمل عادي" || $dailyoperation->type == "مبيت بالقطاع")  
                             
                             @else  
 

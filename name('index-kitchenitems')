@@ -1,0 +1,21 @@
+
+   UnexpectedValueException 
+
+  Invalid route action: [kitchenitems].
+
+  at C:\Laravel\operations\vendor\laravel\framework\src\Illuminate\Routing\RouteAction.php:92
+     88▕      */
+     89▕     protected static function makeInvokable($action)
+     90▕     {
+     91▕         if (! method_exists($action, '__invoke')) {
+  ➜  92▕             throw new UnexpectedValueException("Invalid route action: [{$action}].");
+     93▕         }
+     94▕ 
+     95▕         return $action.'@__invoke';
+     96▕     }
+
+  1   C:\Laravel\operations\vendor\laravel\framework\src\Illuminate\Routing\RouteAction.php:47
+      Illuminate\Routing\RouteAction::makeInvokable("kitchenitems")
+
+  2   C:\Laravel\operations\vendor\laravel\framework\src\Illuminate\Routing\Route.php:190
+      Illuminate\Routing\RouteAction::parse("kitchenitems", ["kitchenitems", "kitchenitems"])

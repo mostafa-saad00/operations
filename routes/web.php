@@ -2,12 +2,14 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Livewire\Officers;
+use App\Http\Livewire\ShowOfficer;
 use App\Http\Livewire\Pistols;
 use App\Http\Livewire\Fromtooperations;
 use App\Http\Livewire\Weeklyofficeroperations;
 use App\Http\Livewire\Createweeklyofficeroperations;
 use App\Http\Livewire\Ma2moryats;
 use App\Http\Livewire\Dailyoperations;
+use App\Http\Livewire\Kitchenitems;
 use App\Http\Controllers\OfficerController;
 use App\Http\Controllers\DailyoperationController;
 use App\Http\Controllers\FromtooperationController;
@@ -17,6 +19,8 @@ use App\Http\Controllers\TrainingController;
 use App\Http\Controllers\NagadatahdafController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\Ma2moryatController;
+use App\Http\Controllers\KitchenitemController;
+use App\Http\Controllers\KitchendailydistributionController;
 use App\Models\Officer;
 use App\Models\Gehat;
 use App\Models\Pistol;
@@ -25,6 +29,11 @@ use App\Models\Weeklyofficeroperation;
 use App\Models\Dailyoperation;
 
 
+Route::get('word', function(){
+    return view('word');
+});
+
+Route::post('word', [OfficerController::class, 'word'])->name('word');
 
 
 
@@ -75,12 +84,17 @@ Route::get('/dashboard', function () {
 
         Dailyoperation::create([
             "name" => 'اجازة دوري',
-            "type" => 'اجازات',
+            "type" => 'اجازة دوري',
         ]);
 
         Dailyoperation::create([
             "name" => 'اجازة مرضي',
-            "type" => 'مرضي',
+            "type" => 'اجازة مرضي',
+        ]);
+
+        Dailyoperation::create([
+            "name" => 'اجازة طارئة',
+            "type" => 'اجازة طارئة',
         ]);
 
         Dailyoperation::create([
@@ -161,13 +175,13 @@ Route::controller(PostController::class)->middleware(['auth'])->group(function (
 
 // Officers Routes
 Route::get('/officers', Officers::class)->middleware(['auth'])->name('index-officers');
+Route::get('/officer/{officer}', ShowOfficer::class)->middleware(['auth'])->name('show-officer');
 Route::controller(OfficerController::class)->middleware(['auth'])->group(function () {
     Route::get('/create-officer', 'create')->name('create-officer');
     Route::post('/store-officer', 'store')->name('store-officer');
     Route::get('/edit-officer/{officer}', 'edit')->name('edit-officer');
     Route::put('/update-officer/{officer}', 'update')->name('update-officer');
     Route::delete('/delete-officer/{officer}', 'destroy')->name('destroy-officer');
-    Route::get('/officer/{officer}', 'show_officer')->name('show-officer'); 
 });
 // End Officers Routes
 
@@ -245,6 +259,32 @@ Route::controller(Ma2moryatController::class)->middleware(['auth'])->group(funct
 });
 // End Ma2moryat
 
+
+// kitchen
+Route::get('/kitchenitems', kitchenitems::class)->middleware(['auth'])->name('index-kitchenitems');
+Route::controller(KitchenitemController::class)->middleware(['auth'])->group(function () {
+    Route::get('/create-kitchenitem', 'create')->name('create-kitchenitem');
+    Route::post('/store-kitchenitem', 'store')->name('store-kitchenitem');
+    Route::get('/edit-kitchenitem/{kitchenitem}', 'edit')->name('edit-kitchenitem');
+    Route::put('/update-kitchenitem/{kitchenitem}', 'update')->name('update-kitchenitem');
+    Route::delete('/delete-kitchenitem/{kitchenitem}', 'destroy')->name('destroy-kitchenitem');
+
+
+});
+// End kitchen
+
+// kitchendailydistribution
+Route::controller(KitchendailydistributionController::class)->middleware(['auth'])->group(function () {
+    Route::get('/create-kitchendailydistribution', 'create')->name('create-kitchendailydistribution');
+    Route::post('/store-kitchendailydistribution', 'store')->name('store-kitchendailydistribution');
+    Route::get('/edit-kitchendailydistribution/{kitchendailydistribution}', 'edit')->name('edit-kitchendailydistribution');
+    Route::put('/update-kitchendailydistribution/{kitchendailydistribution}', 'update')->name('update-kitchendailydistribution');
+    Route::delete('/delete-kitchendailydistribution/{kitchendailydistribution}', 'destroy')->name('destroy-kitchendailydistribution');
+
+    Route::get('/show-kitchendailydistribution/{kitchendailydistribution}', 'show')->name('show-kitchendailydistribution');
+});
+
+// End kitchendailydistribution
 
 
 require __DIR__.'/auth.php';

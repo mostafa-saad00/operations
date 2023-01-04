@@ -214,6 +214,22 @@
               </svg>
               </a>
 
+              <!-- Kitchen -->
+              <a
+              href="{{ route('index-kitchenitems') }}"
+              @if (request()->routeIs('index-kitchenitems') || request()->routeIs('create-kitchenitem') || request()->routeIs('edit-kitchenitem') || request()->routeIs('show-kitchenitem'))
+                  class="flex h-11 w-11 items-center justify-center rounded-lg bg-primary/10 outline-none transition-colors duration-200 hover:bg-primary/20 focus:bg-primary/20 active:bg-primary/25 dark:hover:bg-navy-300/20 dark:focus:bg-navy-300/20 dark:active:bg-navy-300/25"  
+              @else
+                  class="flex h-11 w-11 items-center justify-center rounded-lg outline-none transition-colors duration-200 hover:bg-primary/20 focus:bg-primary/20 active:bg-primary/25 dark:hover:bg-navy-300/20 dark:focus:bg-navy-300/20 dark:active:bg-navy-300/25"
+              @endif
+              class="flex h-11 w-11 items-center justify-center rounded-lg outline-none transition-colors duration-200 hover:bg-primary/20 focus:bg-primary/20 active:bg-primary/25 dark:hover:bg-navy-300/20 dark:focus:bg-navy-300/20 dark:active:bg-navy-300/25"
+              x-tooltip.placement.right="'المطبخ'"
+            >
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-palette-fill" viewBox="0 0 16 16">
+              <path d="M12.433 10.07C14.133 10.585 16 11.15 16 8a8 8 0 1 0-8 8c1.996 0 1.826-1.504 1.649-3.08-.124-1.101-.252-2.237.351-2.92.465-.527 1.42-.237 2.433.07zM8 5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm4.5 3a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zM5 6.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm.5 6.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z"/>
+            </svg>
+            </a>
+
             </div>
 
             
@@ -607,6 +623,72 @@
 
                   
                   
+                </li>
+                
+              </ul>
+
+              <ul class="flex flex-1 flex-col px-4 font-inter">
+                <li x-data="accordionItem('menu-item-1')">
+                  <a
+                    :class="expanded && 'text-slate-800 font-semibold dark:text-navy-50'"
+                    @click="expanded = !expanded"
+                    class="flex items-center justify-between py-2 text-xs+ tracking-wide text-slate-500 outline-none transition-[color,padding-left] duration-300 ease-in-out hover:text-slate-800 dark:text-navy-200 dark:hover:text-navy-50"
+                    href="javascript:void(0);"
+                  >
+                    <span>المطبخ</span>
+                    <svg
+                      :class="expanded && 'rotate-90'"
+                      xmlns="http://www.w3.org/2000/svg"
+                      class="h-4 w-4 text-slate-400 transition-transform ease-in-out"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M15 19l-7-7 7-7"
+                      />
+                    </svg>
+                  </a>
+                  <ul x-collapse x-show="expanded">
+                    <li>
+                      <a
+                        x-data="navLink"
+                        href="{{ route('index-kitchenitems') }}"
+                        :class="isActive ? 'font-medium text-primary dark:text-accent-light' : 'text-slate-500 hover:text-slate-800 dark:text-navy-200 dark:hover:text-navy-50'"
+                        class="flex items-center justify-between p-2 text-xs+ tracking-wide outline-none transition-[color,padding-right] duration-300 ease-in-out hover:pr-4"
+                      >
+                        <div
+                          class="flex items-center space-x-2 space-x-reverse"
+                        >
+                          <div
+                            class="h-1.5 w-1.5 rounded-full border border-current opacity-40"
+                          ></div>
+                          <span>اصناف المطبخ</span>
+                        </div>
+                      </a>
+                    </li>
+                    <li>
+                      <a
+                        x-data="navLink"
+                        href="{{ route('create-kitchenitem') }}"
+                        :class="isActive ? 'font-medium text-primary dark:text-accent-light' : 'text-slate-500 hover:text-slate-800 dark:text-navy-200 dark:hover:text-navy-50'"
+                        class="flex items-center justify-between p-2 text-xs+ tracking-wide outline-none transition-[color,padding-right] duration-300 ease-in-out hover:pr-4"
+                      >
+                        <div
+                          class="flex items-center space-x-2 space-x-reverse"
+                        >
+                          <div
+                            class="h-1.5 w-1.5 rounded-full border border-current opacity-40"
+                          ></div>
+                          <span>اضافة صنف جديد</span>
+                        </div>
+                      </a>
+                    </li>
+                    
+                  </ul>
                 </li>
                 
               </ul>

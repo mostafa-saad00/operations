@@ -30,10 +30,10 @@ class PistolFormRequest extends FormRequest
     }
 
     public function messages()
-{
-    return [
-        'type.required' => 'لم يتم ادخال نوع الطبنجة',
-        'number.required' => 'لم يتم ادخال رقم الطبنجة',
-    ];
-}
+    {
+        return [
+            'type.required' => 'لم يتم ادخال نوع الطبنجة',
+            'number.required' => 'لم يتم ادخال رقم الطبنجة',
+        ];
+    }
 }
