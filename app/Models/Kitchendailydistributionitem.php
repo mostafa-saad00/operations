@@ -15,4 +15,9 @@ class Kitchendailydistributionitem extends Model
     {
         return $this->belongsTo(Kitchendailydistribution::class);
     }
+
+    public function kitchenitem()
+    {
+        return $this->belongsTo(Kitchenitem::class);
+    }
 }

@@ -23,9 +23,9 @@ return new class extends Migration
             $table->float('mokrar_amen', 8, 3);
             $table->float('mokrar_solider', 8, 3);
 
-            $table->float('before_quantity', 8, 3);
-            $table->float('after_quantity', 8, 3);
-            $table->float('total_distribution', 8, 3);
+            $table->float('before_quantity', 11, 3);
+            $table->float('after_quantity', 11, 3);
+            $table->float('total_distribution', 11, 3);
 
             $table->timestamps();
         });

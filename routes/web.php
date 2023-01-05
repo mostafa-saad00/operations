@@ -10,6 +10,7 @@ use App\Http\Livewire\Createweeklyofficeroperations;
 use App\Http\Livewire\Ma2moryats;
 use App\Http\Livewire\Dailyoperations;
 use App\Http\Livewire\Kitchenitems;
+use App\Http\Livewire\Kitchendailydistributions;
 use App\Http\Controllers\OfficerController;
 use App\Http\Controllers\DailyoperationController;
 use App\Http\Controllers\FromtooperationController;
@@ -274,6 +275,7 @@ Route::controller(KitchenitemController::class)->middleware(['auth'])->group(fun
 // End kitchen
 
 // kitchendailydistribution
+Route::get('/kitchendailydistributions', Kitchendailydistributions::class)->middleware(['auth'])->name('index-kitchendailydistribution');
 Route::controller(KitchendailydistributionController::class)->middleware(['auth'])->group(function () {
     Route::get('/create-kitchendailydistribution', 'create')->name('create-kitchendailydistribution');
     Route::post('/store-kitchendailydistribution', 'store')->name('store-kitchendailydistribution');
@@ -282,6 +284,7 @@ Route::controller(KitchendailydistributionController::class)->middleware(['auth'
     Route::delete('/delete-kitchendailydistribution/{kitchendailydistribution}', 'destroy')->name('destroy-kitchendailydistribution');
 
     Route::get('/show-kitchendailydistribution/{kitchendailydistribution}', 'show')->name('show-kitchendailydistribution');
+    Route::get('/print-kitchendailydistribution/{kitchendailydistribution}', 'print_kitchendailydistribution')->name('print-kitchendailydistribution');
 });
 
 // End kitchendailydistribution

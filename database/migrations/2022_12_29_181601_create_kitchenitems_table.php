@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('name');
             $table->string('unit');
 
-            $table->float('current_quantity', 8, 3);
+            $table->float('current_quantity', 11, 3);
 
             $table->float('saturday_winter_officer', 8, 3);
             $table->float('saturday_summer_officer', 8, 3);
