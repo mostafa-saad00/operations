@@ -11,6 +11,7 @@ use App\Http\Livewire\Ma2moryats;
 use App\Http\Livewire\Dailyoperations;
 use App\Http\Livewire\Kitchenitems;
 use App\Http\Livewire\Kitchendailydistributions;
+use App\Http\Livewire\Kitchenreceipts;
 use App\Http\Controllers\OfficerController;
 use App\Http\Controllers\DailyoperationController;
 use App\Http\Controllers\FromtooperationController;
@@ -22,6 +23,7 @@ use App\Http\Controllers\PostController;
 use App\Http\Controllers\Ma2moryatController;
 use App\Http\Controllers\KitchenitemController;
 use App\Http\Controllers\KitchendailydistributionController;
+use App\Http\Controllers\KitchenreceiptController;
 use App\Models\Officer;
 use App\Models\Gehat;
 use App\Models\Pistol;
@@ -288,6 +290,19 @@ Route::controller(KitchendailydistributionController::class)->middleware(['auth'
 });
 
 // End kitchendailydistribution
+
+// kitchen Receipt 
+Route::get('/kitchenreceipts', Kitchenreceipts::class)->middleware(['auth'])->name('index-kitchenreceipts');
+Route::controller(KitchenreceiptController::class)->middleware(['auth'])->group(function () {
+    Route::get('/create-kitchenreceipt', 'create')->name('create-kitchenreceipt');
+    Route::post('/store-kitchenreceipt', 'store')->name('store-kitchenreceipt');
+    Route::delete('/delete-kitchenreceipt/{kitchenreceipt}', 'destroy')->name('destroy-kitchenreceipt');
+
+    Route::get('/show-kitchenreceipt/{kitchenreceipt}', 'show')->name('show-kitchenreceipt');
+    Route::get('/print-kitchenreceipt/{kitchenreceipt}', 'print_kitchenreceipt')->name('print-kitchenreceipt');
+});
+
+// End kitchen Receipt
 
 
 require __DIR__.'/auth.php';

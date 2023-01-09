@@ -57,7 +57,7 @@
                         </option>
                     @endforeach
                 </select>
-                </div>    
+                </div>
                 @if($satoperations->count() > 1)
                     <div>
                         <button wire:click.prevent="removeOperation({{$satoperation->id}}, 'satoperations', '{{ $satoperations->first->id->day }}')" class="btn h-9 w-9 p-0 font-medium text-error hover:bg-error/20 focus:bg-error/20 active:bg-error/25">

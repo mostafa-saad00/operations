@@ -704,6 +704,57 @@
                         </div>
                       </a>
                     </li>
+                    <li>
+                      <a
+                        x-data="navLink"
+                        href="{{ route('create-kitchendailydistribution') }}"
+                        :class="isActive ? 'font-medium text-primary dark:text-accent-light' : 'text-slate-500 hover:text-slate-800 dark:text-navy-200 dark:hover:text-navy-50'"
+                        class="flex items-center justify-between p-2 text-xs+ tracking-wide outline-none transition-[color,padding-right] duration-300 ease-in-out hover:pr-4"
+                      >
+                        <div
+                          class="flex items-center space-x-2 space-x-reverse"
+                        >
+                          <div
+                            class="h-1.5 w-1.5 rounded-full border border-current opacity-40"
+                          ></div>
+                          <span>اضافة صرف يومي</span>
+                        </div>
+                      </a>
+                    </li>
+                    <li>
+                      <a
+                        x-data="navLink"
+                        href="{{ route('index-kitchenreceipts') }}"
+                        :class="isActive ? 'font-medium text-primary dark:text-accent-light' : 'text-slate-500 hover:text-slate-800 dark:text-navy-200 dark:hover:text-navy-50'"
+                        class="flex items-center justify-between p-2 text-xs+ tracking-wide outline-none transition-[color,padding-right] duration-300 ease-in-out hover:pr-4"
+                      >
+                        <div
+                          class="flex items-center space-x-2 space-x-reverse"
+                        >
+                          <div
+                            class="h-1.5 w-1.5 rounded-full border border-current opacity-40"
+                          ></div>
+                          <span>سندات الصرف</span>
+                        </div>
+                      </a>
+                    </li>
+                    <li>
+                      <a
+                        x-data="navLink"
+                        href="{{ route('create-kitchenreceipt') }}"
+                        :class="isActive ? 'font-medium text-primary dark:text-accent-light' : 'text-slate-500 hover:text-slate-800 dark:text-navy-200 dark:hover:text-navy-50'"
+                        class="flex items-center justify-between p-2 text-xs+ tracking-wide outline-none transition-[color,padding-right] duration-300 ease-in-out hover:pr-4"
+                      >
+                        <div
+                          class="flex items-center space-x-2 space-x-reverse"
+                        >
+                          <div
+                            class="h-1.5 w-1.5 rounded-full border border-current opacity-40"
+                          ></div>
+                          <span>اضافة سند صرف</span>
+                        </div>
+                      </a>
+                    </li>
                     
                   </ul>
                 </li>
