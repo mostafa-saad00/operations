@@ -10,4 +10,25 @@ class Kitchenitem extends Model
     use HasFactory;
 
     protected $guarded = [];
+
+    public function kitchensupplier()
+    {
+        return $this->belongsTo(Kitchensupplier::class);
+    }
+
+    public function kitchendailydistributionitems()
+    {
+        return $this->hasMany(Kitchendailydistributionitem::class);
+    }
+
+    public function kitchenreceiptitems()
+    {
+        return $this->hasMany(Kitchenreceiptitem::class);
+    }
+
+    public function kitchenitemtransactions()
+    {
+        return $this->hasMany(Kitchenitemtransaction::class);
+    }
+
 }

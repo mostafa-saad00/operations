@@ -16,6 +16,7 @@ return new class extends Migration
         Schema::create('kitchenitems', function (Blueprint $table) {
             $table->id();
 
+            $table->unsignedInteger('kitchensupplier_id');
             $table->string('storage')->default('storage_1');
             $table->string('name');
             $table->string('unit');

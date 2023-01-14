@@ -16,6 +16,9 @@ return new class extends Migration
         Schema::create('fromtooperations', function (Blueprint $table) {
             $table->id();
 
+            $table->unsignedInteger('area_id');
+            $table->unsignedInteger('sector_id');
+
             $table->date('from');
             $table->date('to');
             

@@ -16,6 +16,9 @@ return new class extends Migration
         Schema::create('kitchenreceiptitems', function (Blueprint $table) {
             $table->id();
 
+            $table->unsignedInteger('area_id');
+            $table->unsignedInteger('sector_id');
+
             $table->foreignId('kitchenreceipt_id')->constrained();
             $table->foreignId('kitchenitem_id')->constrained();
             $table->float('quantity', 11, 3);

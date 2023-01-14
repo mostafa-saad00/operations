@@ -16,6 +16,9 @@ return new class extends Migration
         Schema::create('kitchenreceipts', function (Blueprint $table) {
             $table->id();
 
+            $table->unsignedInteger('area_id');
+            $table->unsignedInteger('sector_id');
+
             $table->string('image_folder');
             $table->string('image_text');
             $table->date('date');

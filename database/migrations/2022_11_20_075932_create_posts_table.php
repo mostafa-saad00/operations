@@ -16,6 +16,9 @@ return new class extends Migration
         Schema::create('posts', function (Blueprint $table) {
             $table->id();
 
+            $table->unsignedInteger('area_id');
+            $table->unsignedInteger('sector_id');
+
             $table->string('name');
             $table->string('image');
 

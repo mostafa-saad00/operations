@@ -16,6 +16,9 @@ return new class extends Migration
         Schema::create('officers', function (Blueprint $table) {
             $table->id();
 
+            $table->unsignedInteger('area_id');
+            $table->unsignedInteger('sector_id');
+
             $table->unsignedInteger('gehat_id');
             $table->unsignedInteger('pistol_id');
             $table->string('rank');

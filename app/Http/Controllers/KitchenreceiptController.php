@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests\KitchenreceiptFormRequest;
 use App\Models\Kitchenreceipt;
 use App\Models\Kitchenreceiptitem;
+use App\Models\User;
 use Illuminate\Support\Facades\Storage;
 
 
@@ -19,7 +20,7 @@ class KitchenreceiptController extends Controller
         return view('kitchenreceipt.create', compact('kitchenitems'));
     }
 
-    public function store(KitchenreceiptFormRequest $request)
+    public function store(KitchenreceiptFormRequest $request, User $user)
     {
         $tmp_file = TemporaryFile::where('folder', $request->image)->first();
         $kitchenreceipt = (object)array();
@@ -27,6 +28,8 @@ class KitchenreceiptController extends Controller
         if($tmp_file)
         {
             $kitchenreceipt = Kitchenreceipt::create([
+                'area_id' => $user->area_id,
+                'sector_id' => $user->sector_id,
                 'image_folder' => $tmp_file->folder,
                 'image_text' => $tmp_file->file,
                 'date' => $request->date,
@@ -52,10 +55,13 @@ class KitchenreceiptController extends Controller
             if(request('kitchenitem' . '_' . $item->id) != null)
             {
                 Kitchenreceiptitem::create([
+                    'area_id' => $user->area_id,
+                    'sector_id' => $user->sector_id,
                     'kitchenreceipt_id' => $kitchenreceipt->id,
                     'kitchenitem_id' => $item->id,
                     'quantity' => request('kitchenitem' . '_' . $item->id),
                 ]);
+
 
                 $selected_item = Kitchenitem::where('id', $item->id)->first();
 

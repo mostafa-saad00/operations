@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use App\Models\Kitchenitem;
 use Illuminate\Http\Request;
 use App\Models\Kitchendailydistribution;
+use PhpOffice\PhpWord\TemplateProcessor;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Kitchendailydistributionitem;
 use App\Http\Requests\KitchendailydistributionFormRequest;
-use PhpOffice\PhpWord\TemplateProcessor;
 
 class KitchendailydistributionController extends Controller
 {
@@ -17,8 +18,14 @@ class KitchendailydistributionController extends Controller
         return view('kitchendailydistribution.create');
     }
 
-    public function store(KitchendailydistributionFormRequest $request)
+    public function store(KitchendailydistributionFormRequest $request, User $user)
     {
+        $checkIfTheRecordExict = Kitchendailydistribution::where('date', $request->date)->first();
+        if($checkIfTheRecordExict)
+        {
+            return redirect()->route('create-kitchendailydistribution')->withErrors(['msg' => 'خطأ: تاريخ اليوم المحدد موجود بالفعل']);
+        }
+
         $date = $request->date;
 
         if($request->date == null)
@@ -28,6 +35,8 @@ class KitchendailydistributionController extends Controller
 
         
         $kitchendailydistribution = Kitchendailydistribution::create([
+            'area_id' => $user->area_id,
+            'sector_id' => $user->sector_id,
             'date' => $date,
             'day' => strtolower(date('l', strtotime($date))),
             'officers_number' => $request->officers_number,
@@ -73,8 +82,11 @@ class KitchendailydistributionController extends Controller
             $after_quantity = Kitchenitem::where('id', $kitchenitem->id)->first()->current_quantity - $total_distribution;
 
             Kitchendailydistributionitem::create([
+                'area_id' => $user->area_id,
+                'sector_id' => $user->sector_id,
                 'kitchendailydistribution_id' => $kitchendailydistribution->id,
                 'kitchenitem_id' => $kitchenitem->id,
+                'date' => $date,
                 'mokrar_officer' => $officer_distribution,
                 'mokrar_amen' => $amen_distribution,
                 'mokrar_solider' => $solider_distribution,
@@ -117,6 +129,8 @@ class KitchendailydistributionController extends Controller
             Kitchenitem::where('id', $kitchendailydistributionitem->kitchenitem_id)->update([
                 'current_quantity' => $restore_quantity_value
             ]);
+
+            $kitchendailydistributionitem->delete();
         }
 
         $Kitchendailydistribution->delete();
@@ -135,21 +149,27 @@ class KitchendailydistributionController extends Controller
         if($kitchendailydistribution->day == 'wednesday') { $day = 'الاربعاء'; }  
         if($kitchendailydistribution->day == 'thursday') { $day = 'الخميس'; }  
         if($kitchendailydistribution->day == 'friday') { $day = 'الجمعة'; }  
+
+        $officers_number = $kitchendailydistribution->officers_number;
+        $amens_number = $kitchendailydistribution->amens_number;
+        $soliders_number = $kitchendailydistribution->soliders_number;
+        $kt3_total = $kitchendailydistribution->officers_number + $kitchendailydistribution->amens_number + $kitchendailydistribution->soliders_number;
         
         $templateProcessor->setValue('day', $day);
         $templateProcessor->setValue('date', $kitchendailydistribution->date);
-        $templateProcessor->setValue('officers_number', $kitchendailydistribution->officers_number);
-        $templateProcessor->setValue('amens_number', $kitchendailydistribution->amens_number);
-        $templateProcessor->setValue('soliders_number', $kitchendailydistribution->soliders_number);
+        $templateProcessor->setValue('officers_number', $officers_number);
+        $templateProcessor->setValue('amens_number', $amens_number);
+        $templateProcessor->setValue('soliders_number', $soliders_number);
+        $templateProcessor->setValue('kt3_total', $kt3_total);
 
         foreach($kitchendailydistribution->kitchendailydistributionitems as $distributionitem)
         {
             // الارز
             if($distributionitem->kitchenitem_id == 1)
             {
-                $templateProcessor->setValue('rise_of_mok', $distributionitem->mokrar_officer);
-                $templateProcessor->setValue('rise_am_mok', $distributionitem->mokrar_amen);
-                $templateProcessor->setValue('rise_so_mok', $distributionitem->mokrar_solider);
+                $templateProcessor->setValue('rise_of', $distributionitem->mokrar_officer * $officers_number * $officers_number);
+                $templateProcessor->setValue('rise_am', $distributionitem->mokrar_amen * $amens_number);
+                $templateProcessor->setValue('rise_so', $distributionitem->mokrar_solider * $soliders_number);
                 $templateProcessor->setValue('rise_before', $distributionitem->before_quantity);
                 $templateProcessor->setValue('rise_after', $distributionitem->after_quantity);
                 $templateProcessor->setValue('rise_total', $distributionitem->total_distribution);
@@ -157,19 +177,19 @@ class KitchendailydistributionController extends Controller
             // المكرونة
             if($distributionitem->kitchenitem_id == 2)
             {
-                $templateProcessor->setValue('mkro_of_mok', $distributionitem->mokrar_officer);
-                $templateProcessor->setValue('mkro_am_mok', $distributionitem->mokrar_amen);
-                $templateProcessor->setValue('mkro_so_mok', $distributionitem->mokrar_solider);
-                $templateProcessor->setValue('mkro_before', $distributionitem->before_quantity);
-                $templateProcessor->setValue('mkro_after', $distributionitem->after_quantity);
-                $templateProcessor->setValue('mkro_total', $distributionitem->total_distribution);
+                $templateProcessor->setValue('mkr_of', $distributionitem->mokrar_officer * $officers_number);
+                $templateProcessor->setValue('mkr_am', $distributionitem->mokrar_amen * $amens_number);
+                $templateProcessor->setValue('mkr_so', $distributionitem->mokrar_solider * $soliders_number);
+                $templateProcessor->setValue('mkr_before', $distributionitem->before_quantity);
+                $templateProcessor->setValue('mkr_after', $distributionitem->after_quantity);
+                $templateProcessor->setValue('mkr_total', $distributionitem->total_distribution);
             }
             // شعرية
             if($distributionitem->kitchenitem_id == 3)
             {
-                $templateProcessor->setValue('sh3r_of_mok', $distributionitem->mokrar_officer);
-                $templateProcessor->setValue('sh3r_am_mok', $distributionitem->mokrar_amen);
-                $templateProcessor->setValue('sh3r_so_mok', $distributionitem->mokrar_solider);
+                $templateProcessor->setValue('sh3r_of', $distributionitem->mokrar_officer * $officers_number);
+                $templateProcessor->setValue('sh3r_am', $distributionitem->mokrar_amen * $amens_number);
+                $templateProcessor->setValue('sh3r_so', $distributionitem->mokrar_solider * $soliders_number);
                 $templateProcessor->setValue('sh3r_before', $distributionitem->before_quantity);
                 $templateProcessor->setValue('sh3r_after', $distributionitem->after_quantity);
                 $templateProcessor->setValue('sh3r_total', $distributionitem->total_distribution);
@@ -177,9 +197,9 @@ class KitchendailydistributionController extends Controller
             // فول صحيح
             if($distributionitem->kitchenitem_id == 4)
             {
-                $templateProcessor->setValue('fol1_of_mok', $distributionitem->mokrar_officer);
-                $templateProcessor->setValue('fol1_am_mok', $distributionitem->mokrar_amen);
-                $templateProcessor->setValue('fol1_so_mok', $distributionitem->mokrar_solider);
+                $templateProcessor->setValue('fol1_of', $distributionitem->mokrar_officer * $officers_number);
+                $templateProcessor->setValue('fol1_am', $distributionitem->mokrar_amen * $amens_number);
+                $templateProcessor->setValue('fol1_so', $distributionitem->mokrar_solider * $soliders_number);
                 $templateProcessor->setValue('fol1_before', $distributionitem->before_quantity);
                 $templateProcessor->setValue('fol1_after', $distributionitem->after_quantity);
                 $templateProcessor->setValue('fol1_total', $distributionitem->total_distribution);
@@ -187,9 +207,9 @@ class KitchendailydistributionController extends Controller
             // زيت طعام
             if($distributionitem->kitchenitem_id == 5)
             {
-                $templateProcessor->setValue('zat_of_mok', $distributionitem->mokrar_officer);
-                $templateProcessor->setValue('zat_am_mok', $distributionitem->mokrar_amen);
-                $templateProcessor->setValue('zat_so_mok', $distributionitem->mokrar_solider);
+                $templateProcessor->setValue('zat_of', $distributionitem->mokrar_officer * $officers_number);
+                $templateProcessor->setValue('zat_am', $distributionitem->mokrar_amen * $amens_number);
+                $templateProcessor->setValue('zat_so', $distributionitem->mokrar_solider * $soliders_number);
                 $templateProcessor->setValue('zat_before', $distributionitem->before_quantity);
                 $templateProcessor->setValue('zat_after', $distributionitem->after_quantity);
                 $templateProcessor->setValue('zat_total', $distributionitem->total_distribution);
@@ -197,9 +217,9 @@ class KitchendailydistributionController extends Controller
             // شاي فتلة
             if($distributionitem->kitchenitem_id == 6)
             {
-                $templateProcessor->setValue('shay_of_mok', $distributionitem->mokrar_officer);
-                $templateProcessor->setValue('shay_am_mok', $distributionitem->mokrar_amen);
-                $templateProcessor->setValue('shay_so_mok', $distributionitem->mokrar_solider);
+                $templateProcessor->setValue('shay_of', $distributionitem->mokrar_officer * $officers_number);
+                $templateProcessor->setValue('shay_am', $distributionitem->mokrar_amen * $amens_number);
+                $templateProcessor->setValue('shay_so', $distributionitem->mokrar_solider * $soliders_number);
                 $templateProcessor->setValue('shay_before', $distributionitem->before_quantity);
                 $templateProcessor->setValue('shay_after', $distributionitem->after_quantity);
                 $templateProcessor->setValue('shay_total', $distributionitem->total_distribution);
@@ -207,9 +227,9 @@ class KitchendailydistributionController extends Controller
             // سكر باكة
             if($distributionitem->kitchenitem_id == 7)
             {
-                $templateProcessor->setValue('sokr_of_mok', $distributionitem->mokrar_officer);
-                $templateProcessor->setValue('sokr_am_mok', $distributionitem->mokrar_amen);
-                $templateProcessor->setValue('sokr_so_mok', $distributionitem->mokrar_solider);
+                $templateProcessor->setValue('sokr_of', $distributionitem->mokrar_officer * $officers_number);
+                $templateProcessor->setValue('sokr_am', $distributionitem->mokrar_amen * $amens_number);
+                $templateProcessor->setValue('sokr_so', $distributionitem->mokrar_solider * $soliders_number);
                 $templateProcessor->setValue('sokr_before', $distributionitem->before_quantity);
                 $templateProcessor->setValue('sokr_after', $distributionitem->after_quantity);
                 $templateProcessor->setValue('sokr_total', $distributionitem->total_distribution);
@@ -217,9 +237,9 @@ class KitchendailydistributionController extends Controller
             // لحوم
             if($distributionitem->kitchenitem_id == 8)
             {
-                $templateProcessor->setValue('meat_of_mok', $distributionitem->mokrar_officer);
-                $templateProcessor->setValue('meat_am_mok', $distributionitem->mokrar_amen);
-                $templateProcessor->setValue('meat_so_mok', $distributionitem->mokrar_solider);
+                $templateProcessor->setValue('meat_of', $distributionitem->mokrar_officer * $officers_number);
+                $templateProcessor->setValue('meat_am', $distributionitem->mokrar_amen * $amens_number);
+                $templateProcessor->setValue('meat_so', $distributionitem->mokrar_solider * $soliders_number);
                 $templateProcessor->setValue('meat_before', $distributionitem->before_quantity);
                 $templateProcessor->setValue('meat_after', $distributionitem->after_quantity);
                 $templateProcessor->setValue('meat_total', $distributionitem->total_distribution);
@@ -227,9 +247,9 @@ class KitchendailydistributionController extends Controller
             // دواجن
             if($distributionitem->kitchenitem_id == 9)
             {
-                $templateProcessor->setValue('chkn_of_mok', $distributionitem->mokrar_officer);
-                $templateProcessor->setValue('chkn_am_mok', $distributionitem->mokrar_amen);
-                $templateProcessor->setValue('chkn_so_mok', $distributionitem->mokrar_solider);
+                $templateProcessor->setValue('chkn_of', $distributionitem->mokrar_officer * $officers_number);
+                $templateProcessor->setValue('chkn_am', $distributionitem->mokrar_amen * $amens_number);
+                $templateProcessor->setValue('chkn_so', $distributionitem->mokrar_solider * $soliders_number);
                 $templateProcessor->setValue('chkn_before', $distributionitem->before_quantity);
                 $templateProcessor->setValue('chkn_after', $distributionitem->after_quantity);
                 $templateProcessor->setValue('chkn_total', $distributionitem->total_distribution);
@@ -237,9 +257,9 @@ class KitchendailydistributionController extends Controller
             // خضار مجمد
             if($distributionitem->kitchenitem_id == 10)
             {
-                $templateProcessor->setValue('5dar_of_mok', $distributionitem->mokrar_officer);
-                $templateProcessor->setValue('5dar_am_mok', $distributionitem->mokrar_amen);
-                $templateProcessor->setValue('5dar_so_mok', $distributionitem->mokrar_solider);
+                $templateProcessor->setValue('5dar_of', $distributionitem->mokrar_officer * $officers_number);
+                $templateProcessor->setValue('5dar_am', $distributionitem->mokrar_amen * $amens_number);
+                $templateProcessor->setValue('5dar_so', $distributionitem->mokrar_solider * $soliders_number);
                 $templateProcessor->setValue('5dar_before', $distributionitem->before_quantity);
                 $templateProcessor->setValue('5dar_after', $distributionitem->after_quantity);
                 $templateProcessor->setValue('5dar_total', $distributionitem->total_distribution);
@@ -247,9 +267,9 @@ class KitchendailydistributionController extends Controller
             // فاصوليا جاغة
             if($distributionitem->kitchenitem_id == 11)
             {
-                $templateProcessor->setValue('fsol_of_mok', $distributionitem->mokrar_officer);
-                $templateProcessor->setValue('fsol_am_mok', $distributionitem->mokrar_amen);
-                $templateProcessor->setValue('fsol_so_mok', $distributionitem->mokrar_solider);
+                $templateProcessor->setValue('fsol_of', $distributionitem->mokrar_officer * $officers_number);
+                $templateProcessor->setValue('fsol_am', $distributionitem->mokrar_amen * $amens_number);
+                $templateProcessor->setValue('fsol_so', $distributionitem->mokrar_solider * $soliders_number);
                 $templateProcessor->setValue('fsol_before', $distributionitem->before_quantity);
                 $templateProcessor->setValue('fsol_after', $distributionitem->after_quantity);
                 $templateProcessor->setValue('fsol_total', $distributionitem->total_distribution);
@@ -257,9 +277,9 @@ class KitchendailydistributionController extends Controller
             // ملح
             if($distributionitem->kitchenitem_id == 12)
             {
-                $templateProcessor->setValue('salt_of_mok', $distributionitem->mokrar_officer);
-                $templateProcessor->setValue('salt_am_mok', $distributionitem->mokrar_amen);
-                $templateProcessor->setValue('salt_so_mok', $distributionitem->mokrar_solider);
+                $templateProcessor->setValue('salt_of', $distributionitem->mokrar_officer * $officers_number);
+                $templateProcessor->setValue('salt_am', $distributionitem->mokrar_amen * $amens_number);
+                $templateProcessor->setValue('salt_so', $distributionitem->mokrar_solider * $soliders_number);
                 $templateProcessor->setValue('salt_before', $distributionitem->before_quantity);
                 $templateProcessor->setValue('salt_after', $distributionitem->after_quantity);
                 $templateProcessor->setValue('salt_total', $distributionitem->total_distribution);
@@ -267,9 +287,9 @@ class KitchendailydistributionController extends Controller
             // فلفل
             if($distributionitem->kitchenitem_id == 13)
             {
-                $templateProcessor->setValue('flfl_of_mok', $distributionitem->mokrar_officer);
-                $templateProcessor->setValue('flfl_am_mok', $distributionitem->mokrar_amen);
-                $templateProcessor->setValue('flfl_so_mok', $distributionitem->mokrar_solider);
+                $templateProcessor->setValue('flfl_of', $distributionitem->mokrar_officer * $officers_number);
+                $templateProcessor->setValue('flfl_am', $distributionitem->mokrar_amen * $amens_number);
+                $templateProcessor->setValue('flfl_so', $distributionitem->mokrar_solider * $soliders_number);
                 $templateProcessor->setValue('flfl_before', $distributionitem->before_quantity);
                 $templateProcessor->setValue('flfl_after', $distributionitem->after_quantity);
                 $templateProcessor->setValue('flfl_total', $distributionitem->total_distribution);
@@ -277,9 +297,9 @@ class KitchendailydistributionController extends Controller
             // كمون
             if($distributionitem->kitchenitem_id == 14)
             {
-                $templateProcessor->setValue('kmon_of_mok', $distributionitem->mokrar_officer);
-                $templateProcessor->setValue('kmon_am_mok', $distributionitem->mokrar_amen);
-                $templateProcessor->setValue('kmon_so_mok', $distributionitem->mokrar_solider);
+                $templateProcessor->setValue('kmon_of', $distributionitem->mokrar_officer * $officers_number);
+                $templateProcessor->setValue('kmon_am', $distributionitem->mokrar_amen * $amens_number);
+                $templateProcessor->setValue('kmon_so', $distributionitem->mokrar_solider * $soliders_number);
                 $templateProcessor->setValue('kmon_before', $distributionitem->before_quantity);
                 $templateProcessor->setValue('kmon_after', $distributionitem->after_quantity);
                 $templateProcessor->setValue('kmon_total', $distributionitem->total_distribution);
@@ -287,9 +307,9 @@ class KitchendailydistributionController extends Controller
             // بصل ناشف
             if($distributionitem->kitchenitem_id == 15)
             {
-                $templateProcessor->setValue('bsal_of_mok', $distributionitem->mokrar_officer);
-                $templateProcessor->setValue('bsal_am_mok', $distributionitem->mokrar_amen);
-                $templateProcessor->setValue('bsal_so_mok', $distributionitem->mokrar_solider);
+                $templateProcessor->setValue('bsal_of', $distributionitem->mokrar_officer * $officers_number);
+                $templateProcessor->setValue('bsal_am', $distributionitem->mokrar_amen * $amens_number);
+                $templateProcessor->setValue('bsal_so', $distributionitem->mokrar_solider * $soliders_number);
                 $templateProcessor->setValue('bsal_before', $distributionitem->before_quantity);
                 $templateProcessor->setValue('bsal_after', $distributionitem->after_quantity);
                 $templateProcessor->setValue('bsal_total', $distributionitem->total_distribution);
@@ -297,9 +317,9 @@ class KitchendailydistributionController extends Controller
             // سلطة
             if($distributionitem->kitchenitem_id == 16)
             {
-                $templateProcessor->setValue('slta_of_mok', $distributionitem->mokrar_officer);
-                $templateProcessor->setValue('slta_am_mok', $distributionitem->mokrar_amen);
-                $templateProcessor->setValue('slta_so_mok', $distributionitem->mokrar_solider);
+                $templateProcessor->setValue('slta_of', $distributionitem->mokrar_officer * $officers_number);
+                $templateProcessor->setValue('slta_am', $distributionitem->mokrar_amen * $amens_number);
+                $templateProcessor->setValue('slta_so', $distributionitem->mokrar_solider * $soliders_number);
                 $templateProcessor->setValue('slta_before', $distributionitem->before_quantity);
                 $templateProcessor->setValue('slta_after', $distributionitem->after_quantity);
                 $templateProcessor->setValue('slta_total', $distributionitem->total_distribution);
@@ -307,9 +327,9 @@ class KitchendailydistributionController extends Controller
             // فاكهة
             if($distributionitem->kitchenitem_id == 17)
             {
-                $templateProcessor->setValue('frut_of_mok', $distributionitem->mokrar_officer);
-                $templateProcessor->setValue('frut_am_mok', $distributionitem->mokrar_amen);
-                $templateProcessor->setValue('frut_so_mok', $distributionitem->mokrar_solider);
+                $templateProcessor->setValue('frut_of', $distributionitem->mokrar_officer * $officers_number);
+                $templateProcessor->setValue('frut_am', $distributionitem->mokrar_amen * $amens_number);
+                $templateProcessor->setValue('frut_so', $distributionitem->mokrar_solider * $soliders_number);
                 $templateProcessor->setValue('frut_before', $distributionitem->before_quantity);
                 $templateProcessor->setValue('frut_after', $distributionitem->after_quantity);
                 $templateProcessor->setValue('frut_total', $distributionitem->total_distribution);
@@ -317,9 +337,9 @@ class KitchendailydistributionController extends Controller
             // صلصة
             if($distributionitem->kitchenitem_id == 18)
             {
-                $templateProcessor->setValue('sals_of_mok', $distributionitem->mokrar_officer);
-                $templateProcessor->setValue('sals_am_mok', $distributionitem->mokrar_amen);
-                $templateProcessor->setValue('sals_so_mok', $distributionitem->mokrar_solider);
+                $templateProcessor->setValue('sals_of', $distributionitem->mokrar_officer * $officers_number);
+                $templateProcessor->setValue('sals_am', $distributionitem->mokrar_amen * $amens_number);
+                $templateProcessor->setValue('sals_so', $distributionitem->mokrar_solider * $soliders_number);
                 $templateProcessor->setValue('sals_before', $distributionitem->before_quantity);
                 $templateProcessor->setValue('sals_after', $distributionitem->after_quantity);
                 $templateProcessor->setValue('sals_total', $distributionitem->total_distribution);
@@ -327,9 +347,9 @@ class KitchendailydistributionController extends Controller
             // جبنة
             if($distributionitem->kitchenitem_id == 19)
             {
-                $templateProcessor->setValue('gebn_of_mok', $distributionitem->mokrar_officer);
-                $templateProcessor->setValue('gebn_am_mok', $distributionitem->mokrar_amen);
-                $templateProcessor->setValue('gebn_so_mok', $distributionitem->mokrar_solider);
+                $templateProcessor->setValue('gebn_of', $distributionitem->mokrar_officer * $officers_number);
+                $templateProcessor->setValue('gebn_am', $distributionitem->mokrar_amen * $amens_number);
+                $templateProcessor->setValue('gebn_so', $distributionitem->mokrar_solider * $soliders_number);
                 $templateProcessor->setValue('gebn_before', $distributionitem->before_quantity);
                 $templateProcessor->setValue('gebn_after', $distributionitem->after_quantity);
                 $templateProcessor->setValue('gebn_total', $distributionitem->total_distribution);
@@ -337,9 +357,9 @@ class KitchendailydistributionController extends Controller
             // حلاوة طحينية
             if($distributionitem->kitchenitem_id == 20)
             {
-                $templateProcessor->setValue('7law_of_mok', $distributionitem->mokrar_officer);
-                $templateProcessor->setValue('7law_am_mok', $distributionitem->mokrar_amen);
-                $templateProcessor->setValue('7law_so_mok', $distributionitem->mokrar_solider);
+                $templateProcessor->setValue('7law_of', $distributionitem->mokrar_officer * $officers_number);
+                $templateProcessor->setValue('7law_am', $distributionitem->mokrar_amen * $amens_number);
+                $templateProcessor->setValue('7law_so', $distributionitem->mokrar_solider * $soliders_number);
                 $templateProcessor->setValue('7law_before', $distributionitem->before_quantity);
                 $templateProcessor->setValue('7law_after', $distributionitem->after_quantity);
                 $templateProcessor->setValue('7law_total', $distributionitem->total_distribution);
@@ -347,9 +367,9 @@ class KitchendailydistributionController extends Controller
             // مربة
             if($distributionitem->kitchenitem_id == 21)
             {
-                $templateProcessor->setValue('mrba_of_mok', $distributionitem->mokrar_officer);
-                $templateProcessor->setValue('mrba_am_mok', $distributionitem->mokrar_amen);
-                $templateProcessor->setValue('mrba_so_mok', $distributionitem->mokrar_solider);
+                $templateProcessor->setValue('mrba_of', $distributionitem->mokrar_officer * $officers_number);
+                $templateProcessor->setValue('mrba_am', $distributionitem->mokrar_amen * $amens_number);
+                $templateProcessor->setValue('mrba_so', $distributionitem->mokrar_solider * $soliders_number);
                 $templateProcessor->setValue('mrba_before', $distributionitem->before_quantity);
                 $templateProcessor->setValue('mrba_after', $distributionitem->after_quantity);
                 $templateProcessor->setValue('mrba_total', $distributionitem->total_distribution);
@@ -357,9 +377,9 @@ class KitchendailydistributionController extends Controller
             // عدس
             if($distributionitem->kitchenitem_id == 22)
             {
-                $templateProcessor->setValue('3ads_of_mok', $distributionitem->mokrar_officer);
-                $templateProcessor->setValue('3ads_am_mok', $distributionitem->mokrar_amen);
-                $templateProcessor->setValue('3ads_so_mok', $distributionitem->mokrar_solider);
+                $templateProcessor->setValue('3ads_of', $distributionitem->mokrar_officer * $officers_number);
+                $templateProcessor->setValue('3ads_am', $distributionitem->mokrar_amen * $amens_number);
+                $templateProcessor->setValue('3ads_so', $distributionitem->mokrar_solider * $soliders_number);
                 $templateProcessor->setValue('3ads_before', $distributionitem->before_quantity);
                 $templateProcessor->setValue('3ads_after', $distributionitem->after_quantity);
                 $templateProcessor->setValue('3ads_total', $distributionitem->total_distribution);
@@ -367,12 +387,22 @@ class KitchendailydistributionController extends Controller
             // فول معلب
             if($distributionitem->kitchenitem_id == 23)
             {
-                $templateProcessor->setValue('fol2_of_mok', $distributionitem->mokrar_officer);
-                $templateProcessor->setValue('fol2_am_mok', $distributionitem->mokrar_amen);
-                $templateProcessor->setValue('fol2_so_mok', $distributionitem->mokrar_solider);
+                $templateProcessor->setValue('fol2_of', $distributionitem->mokrar_officer * $officers_number);
+                $templateProcessor->setValue('fol2_am', $distributionitem->mokrar_amen * $amens_number);
+                $templateProcessor->setValue('fol2_so', $distributionitem->mokrar_solider * $soliders_number);
                 $templateProcessor->setValue('fol2_before', $distributionitem->before_quantity);
                 $templateProcessor->setValue('fol2_after', $distributionitem->after_quantity);
                 $templateProcessor->setValue('fol2_total', $distributionitem->total_distribution);
+            }
+            // بيض
+            if($distributionitem->kitchenitem_id == 26)
+            {
+                $templateProcessor->setValue('egg_of', $distributionitem->mokrar_officer * $officers_number);
+                $templateProcessor->setValue('egg_am', $distributionitem->mokrar_amen * $amens_number);
+                $templateProcessor->setValue('egg_so', $distributionitem->mokrar_solider * $soliders_number);
+                $templateProcessor->setValue('egg_before', $distributionitem->before_quantity);
+                $templateProcessor->setValue('egg_after', $distributionitem->after_quantity);
+                $templateProcessor->setValue('egg_total', $distributionitem->total_distribution);
             }
         }
 

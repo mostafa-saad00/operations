@@ -5,17 +5,26 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Kitchenitem;
 use App\Http\Requests\KitchenitemFormRequest;
+use App\Models\Kitchensupplier;
+
+use PhpOffice\PhpWord\TemplateProcessor;
+use PhpOffice\PhpWord\Style\TablePosition;
+use PhpOffice\PhpWord\Element\Table;
+use PhpOffice\PhpWord\SimpleType\TblWidth;
+use PhpOffice\PhpWord\Element\TextRun;
 
 class KitchenitemController extends Controller
 {
     public function create()
-    {
-        return view('kitchen.create');
+    { 
+        $kitchensuppliers = Kitchensupplier::all();
+        return view('kitchen.create', compact('kitchensuppliers'));
     }
 
     public function store(KitchenitemFormRequest $request)
     {
         $kitchenitem = Kitchenitem::create([
+            'kitchensupplier_id' => $request->kitchensupplier_id,
             'name' => $request->name,
             'unit' => $request->unit,
             'current_quantity' => $request->current_quantity,
@@ -75,12 +84,14 @@ class KitchenitemController extends Controller
 
     public function edit(Kitchenitem $kitchenitem)
     {
-        return view('kitchen.edit', compact('kitchenitem'));
+        $kitchensuppliers = Kitchensupplier::all();
+        return view('kitchen.edit', compact('kitchenitem', 'kitchensuppliers'));
     }
 
     public function update(KitchenitemFormRequest $request, Kitchenitem $kitchenitem)
     {
         $kitchenitem = Kitchenitem::where('id', $kitchenitem->id)->update([
+            'kitchensupplier_id' => $request->kitchensupplier_id,
             'name' => $request->name,
             'unit' => $request->unit,
             'current_quantity' => $request->current_quantity,
@@ -141,5 +152,52 @@ class KitchenitemController extends Controller
     {
         $kitchenitem->delete();
         return redirect()->route('index-kitchenitems')->with('message', 'تم حذف الصنف بنجاح');
+    }
+
+    public function print_items()
+    {
+        $kitchenitems = Kitchenitem::all();
+        $templateProcessor = new TemplateProcessor('word-templates/default_cs_security.docx');
+        $cellHCentered = ['alignment' => \PhpOffice\PhpWord\SimpleType\Jc::END];
+        $cellVCentered = ['valign' => \PhpOffice\PhpWord\SimpleType\VerticalJc::CENTER];
+        $style = ['rtl' => true, 'size' => 11];
+
+        $table = new Table(['borderSize' => 1, 'borderColor' => 'black', 'width' => 10000, 'unit' => TblWidth::TWIP]);
+        
+        $table->addRow();
+
+        $cell = $table->addCell(100, $cellVCentered);
+        $textrun = $cell->addTextRun($cellHCentered);
+        $textrun->addText('الكمية', $style);
+        
+        $cell = $table->addCell(500, $cellVCentered);
+        $textrun = $cell->addTextRun($cellHCentered);
+        $textrun->addText('الصنف', $style);
+
+        foreach($kitchenitems as $item)
+        {
+            $table->addRow();
+
+            $cell = $table->addCell(100, $cellVCentered);
+            $textrun = $cell->addTextRun($cellHCentered);
+            $textrun->addText($item->current_quantity, $style);
+            
+            $cell = $table->addCell(500, $cellVCentered);
+            $textrun = $cell->addTextRun($cellHCentered);
+            $textrun->addText($item->name, $style);
+
+        }
+        
+
+        $templateProcessor->setComplexBlock('table', $table);
+
+
+
+        $file_name = 'جرد اصناف المطبخ';
+
+        $templateProcessor->saveAs($file_name . '.docx');
+
+
+        return response()->download($file_name . '.docx')->deleteFileAfterSend(true);
     }
 }

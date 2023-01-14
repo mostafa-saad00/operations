@@ -15,6 +15,8 @@ return new class extends Migration
     {
         Schema::create('officer_training', function (Blueprint $table) {
 
+            $table->unsignedInteger('area_id');
+            $table->unsignedInteger('sector_id');
             
             $table->foreignId('officer_id')->constrained();
             $table->foreignId('training_id')->constrained();

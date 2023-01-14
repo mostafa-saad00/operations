@@ -16,6 +16,9 @@ return new class extends Migration
         Schema::create('weeklyofficeroperations', function (Blueprint $table) {
             $table->id();
 
+            $table->unsignedInteger('area_id');
+            $table->unsignedInteger('sector_id');
+
             $table->unsignedInteger('officer_id');
             $table->unsignedInteger('fromtooperation_id');
             $table->unsignedInteger('dailyoperation_id');

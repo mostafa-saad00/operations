@@ -16,6 +16,9 @@ return new class extends Migration
         Schema::create('ma2moryats', function (Blueprint $table) {
             $table->id();
 
+            $table->unsignedInteger('area_id');
+            $table->unsignedInteger('sector_id');
+
             $table->unsignedInteger('officer_id');
             $table->unsignedInteger('dailyoperation_id');
             $table->date('date')->nullable();

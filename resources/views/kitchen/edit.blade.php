@@ -34,7 +34,7 @@
             </div>
 
 
-            <div class="grid grid-cols-1 gap-4 sm:grid-cols-3">
+            <div class="grid grid-cols-1 gap-4 sm:grid-cols-4">
 
 
                 <label class="block">
@@ -49,6 +49,21 @@
                     
                   </span>
                 </label>
+
+                <label class="block">
+                  <span class="font-bold">جهة التوريد</span>
+                  <span class="relative mt-1.5 flex">
+                    <select name="kitchensupplier_id"
+                    class="form-select mt-1.5 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:bg-navy-700 dark:hover:border-navy-400 dark:focus:border-accent"
+                    >
+                      @foreach ($kitchensuppliers as $kitchensupplier)   
+                        <option @if($kitchensupplier->id == $kitchenitem->kitchensupplier_id) selected @endif value="{{ $kitchensupplier->id }}">{{ $kitchensupplier->name }}</option>
+                      @endforeach
+  
+                    </select>
+                   
+                  </span>
+              </label>
 
                 <label class="block">
                     <span class="font-bold">وحدة القياس</span>

@@ -30,7 +30,7 @@
 
               
 
-                <form action="{{ route('store-kitchenreceipt') }}" method="POST" enctype="multipart/form-data">
+                <form action="{{ route('store-kitchenreceipt', Auth::user()->id ) }}" method="POST" enctype="multipart/form-data">
                     @csrf
 
                     <div id="error_element">
@@ -115,37 +115,10 @@
                 
               </div>
 
-              <div class="my-7 h-px bg-slate-200 dark:bg-navy-500"></div>
+              @livewire('createkitchenreceipt')
 
-
-              <div class="my-7 h-px bg-slate-200 dark:bg-navy-500"></div>
-              <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                @foreach ($kitchenitems as $kitchenitem)
-
-                <div>
-                  <span class="font-bold">{{ $kitchenitem->name }}</span>
-                  <label class="mt-1 flex space-x-reverse -space-x-px">
-                    
-                    <input
-                      name="kitchenitem_{{ $kitchenitem->id }}"
-                      class="form-input w-full border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:z-10 hover:border-slate-400 focus:z-10 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent"
-                      placeholder="(اختياري)"
-                      step="any"
-                      type="number"
-                    />
-                    <span
-                      class="flex items-center justify-center rounded-l-lg border border-slate-300 bg-slate-150 px-3.5 font-inter text-slate-800 dark:border-navy-450 dark:bg-navy-500 dark:text-navy-100"
-                    >
-                      <span>{{ $kitchenitem->unit }}</span>
-                    </span>
-                  </label>
-                </div>
-                @endforeach
-
-
-               
-                
-              </div>
+              
+              
 
               
               

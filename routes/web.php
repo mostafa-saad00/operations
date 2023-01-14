@@ -1,35 +1,37 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
-use App\Http\Livewire\Officers;
-use App\Http\Livewire\ShowOfficer;
-use App\Http\Livewire\Pistols;
-use App\Http\Livewire\Fromtooperations;
-use App\Http\Livewire\Weeklyofficeroperations;
-use App\Http\Livewire\Createweeklyofficeroperations;
-use App\Http\Livewire\Ma2moryats;
-use App\Http\Livewire\Dailyoperations;
-use App\Http\Livewire\Kitchenitems;
-use App\Http\Livewire\Kitchendailydistributions;
-use App\Http\Livewire\Kitchenreceipts;
-use App\Http\Controllers\OfficerController;
-use App\Http\Controllers\DailyoperationController;
-use App\Http\Controllers\FromtooperationController;
-use App\Http\Controllers\WeeklyofficeroperationController;
-use App\Http\Controllers\PistolController;
-use App\Http\Controllers\TrainingController;
-use App\Http\Controllers\NagadatahdafController;
-use App\Http\Controllers\PostController;
-use App\Http\Controllers\Ma2moryatController;
-use App\Http\Controllers\KitchenitemController;
-use App\Http\Controllers\KitchendailydistributionController;
-use App\Http\Controllers\KitchenreceiptController;
-use App\Models\Officer;
 use App\Models\Gehat;
 use App\Models\Pistol;
+use App\Models\Officer;
 use App\Models\Training;
-use App\Models\Weeklyofficeroperation;
+use App\Http\Livewire\Pistols;
 use App\Models\Dailyoperation;
+use App\Http\Livewire\Officers;
+use App\Http\Livewire\Ma2moryats;
+use App\Http\Livewire\ShowOfficer;
+use App\Http\Livewire\Kitchenitems;
+use Illuminate\Support\Facades\Route;
+use App\Http\Livewire\Dailyoperations;
+use App\Http\Livewire\Kitchenreceipts;
+use App\Models\Weeklyofficeroperation;
+use App\Http\Livewire\Fromtooperations;
+use App\Http\Controllers\PostController;
+use App\Http\Controllers\PistolController;
+use App\Http\Controllers\OfficerController;
+use App\Http\Livewire\Createkitchenreceipt;
+use App\Http\Controllers\TrainingController;
+use App\Http\Controllers\Ma2moryatController;
+use App\Http\Livewire\Weeklyofficeroperations;
+use App\Http\Controllers\KitchenitemController;
+use App\Http\Controllers\NagadatahdafController;
+use App\Http\Livewire\Kitchendailydistributions;
+use App\Http\Controllers\DailyoperationController;
+use App\Http\Controllers\KitchenreceiptController;
+use App\Http\Controllers\KitchenReportsController;
+use App\Http\Controllers\FromtooperationController;
+use App\Http\Livewire\Createweeklyofficeroperations;
+use App\Http\Controllers\WeeklyofficeroperationController;
+use App\Http\Controllers\KitchendailydistributionController;
 
 
 Route::get('word', function(){
@@ -262,7 +264,7 @@ Route::controller(Ma2moryatController::class)->middleware(['auth'])->group(funct
 });
 // End Ma2moryat
 
-
+ 
 // kitchen
 Route::get('/kitchenitems', kitchenitems::class)->middleware(['auth'])->name('index-kitchenitems');
 Route::controller(KitchenitemController::class)->middleware(['auth'])->group(function () {
@@ -272,6 +274,7 @@ Route::controller(KitchenitemController::class)->middleware(['auth'])->group(fun
     Route::put('/update-kitchenitem/{kitchenitem}', 'update')->name('update-kitchenitem');
     Route::delete('/delete-kitchenitem/{kitchenitem}', 'destroy')->name('destroy-kitchenitem');
 
+    Route::get('/print-items', 'print_items')->name('print-items');
 
 });
 // End kitchen
@@ -280,7 +283,7 @@ Route::controller(KitchenitemController::class)->middleware(['auth'])->group(fun
 Route::get('/kitchendailydistributions', Kitchendailydistributions::class)->middleware(['auth'])->name('index-kitchendailydistribution');
 Route::controller(KitchendailydistributionController::class)->middleware(['auth'])->group(function () {
     Route::get('/create-kitchendailydistribution', 'create')->name('create-kitchendailydistribution');
-    Route::post('/store-kitchendailydistribution', 'store')->name('store-kitchendailydistribution');
+    Route::post('/store-kitchendailydistribution/{user}', 'store')->name('store-kitchendailydistribution');
     Route::get('/edit-kitchendailydistribution/{kitchendailydistribution}', 'edit')->name('edit-kitchendailydistribution');
     Route::put('/update-kitchendailydistribution/{kitchendailydistribution}', 'update')->name('update-kitchendailydistribution');
     Route::delete('/delete-kitchendailydistribution/{kitchendailydistribution}', 'destroy')->name('destroy-kitchendailydistribution');
@@ -295,7 +298,7 @@ Route::controller(KitchendailydistributionController::class)->middleware(['auth'
 Route::get('/kitchenreceipts', Kitchenreceipts::class)->middleware(['auth'])->name('index-kitchenreceipts');
 Route::controller(KitchenreceiptController::class)->middleware(['auth'])->group(function () {
     Route::get('/create-kitchenreceipt', 'create')->name('create-kitchenreceipt');
-    Route::post('/store-kitchenreceipt', 'store')->name('store-kitchenreceipt');
+    Route::post('/store-kitchenreceipt/{user}', 'store')->name('store-kitchenreceipt');
     Route::delete('/delete-kitchenreceipt/{kitchenreceipt}', 'destroy')->name('destroy-kitchenreceipt');
 
     Route::get('/show-kitchenreceipt/{kitchenreceipt}', 'show')->name('show-kitchenreceipt');
@@ -304,5 +307,14 @@ Route::controller(KitchenreceiptController::class)->middleware(['auth'])->group(
 
 // End kitchen Receipt
 
+// kitchen Reports 
+Route::controller(KitchenReportsController::class)->middleware(['auth'])->group(function () {
+    Route::get('/kitchen-reports', 'kitchen_reports')->name('kitchen-reports');
+    Route::post('/kitchen-monthly-consumption-numbers/{user}', 'kitchen_monthly_consumption_numbers')->name('kitchen-monthly-consumption-numbers');
+    Route::post('/kitchen-monthly-amdad-numbers/{user}', 'kitchen_monthly_amdad_numbers')->name('kitchen-monthly-amdad-numbers');
+    Route::post('/kitchen-monthly-ta7sen-numbers/{user}', 'kitchen_monthly_ta7sen_numbers')->name('kitchen-monthly-ta7sen-numbers');
+});
+
+// End kitchen Reports
 
 require __DIR__.'/auth.php';

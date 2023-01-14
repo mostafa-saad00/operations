@@ -13,15 +13,10 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('photos', function (Blueprint $table) {
+        Schema::create('kitchensuppliers', function (Blueprint $table) {
             $table->id();
 
-            $table->unsignedInteger('area_id');
-            $table->unsignedInteger('sector_id');
-
-            $table->foreignId('officer_id')->constrained()->onDelete('cascade');;
-            $table->string('folder');
-            $table->string('text');
+            $table->string('name');
 
             $table->timestamps();
         });
@@ -34,6 +29,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('photos');
+        Schema::dropIfExists('kitchensuppliers');
     }
 };

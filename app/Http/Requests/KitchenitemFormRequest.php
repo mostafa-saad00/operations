@@ -17,6 +17,7 @@ class KitchenitemFormRequest extends FormRequest
     public function rules()
     {
         return [
+            'kitchensupplier_id' => ['required'],
             'name' => ['required'],
             'unit' => ['required'],
             'current_quantity' => ['required'],
@@ -75,6 +76,7 @@ class KitchenitemFormRequest extends FormRequest
     public function messages()
     {
         return [
+            'kitchensupplier_id.required'       => 'حقل جهة التوريد مطلوب مطلوب',
             'name.required'                     => 'حقل اسم الصنف مطلوب',
             'unit.required'                     => 'حقل وحدة القياس مطلوب',
             'current_quantity.required'         => 'حقل الكمية الحالية مطلوب',

@@ -16,8 +16,13 @@ return new class extends Migration
         Schema::create('kitchendailydistributionitems', function (Blueprint $table) {
             $table->id();
 
+            $table->unsignedInteger('area_id');
+            $table->unsignedInteger('sector_id');
+            
             $table->unsignedInteger('kitchendailydistribution_id');
             $table->foreignId('kitchenitem_id')->constrained();
+
+            $table->date('date');
 
             $table->float('mokrar_officer', 8, 3);
             $table->float('mokrar_amen', 8, 3);

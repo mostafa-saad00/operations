@@ -16,6 +16,9 @@ return new class extends Migration
         Schema::create('pistols', function (Blueprint $table) {
             $table->id();
 
+            $table->unsignedInteger('area_id');
+            $table->unsignedInteger('sector_id');
+
             $table->string('type');
             $table->string('number');
 

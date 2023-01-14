@@ -15,4 +15,9 @@ class Kitchenreceiptitem extends Model
     {
         return $this->belongsTo(Kitchenreceipt::class);
     }
+
+    public function kitchenitem()
+    {
+        return $this->belongsTo(Kitchenitem::class);
+    }
 }

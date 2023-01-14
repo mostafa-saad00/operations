@@ -26,7 +26,7 @@
 
               
 
-                <form action="{{ route('store-kitchendailydistribution') }}" method="POST">
+                <form action="{{ route('store-kitchendailydistribution', Auth::user()->id ) }}" method="POST">
                     @csrf
 
                     <div id="error_element">
