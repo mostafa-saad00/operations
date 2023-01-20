@@ -10,6 +10,7 @@ use PhpOffice\PhpWord\TemplateProcessor;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Kitchendailydistributionitem;
 use App\Http\Requests\KitchendailydistributionFormRequest;
+use App\Models\SectorKitchenItemTransaction;
 
 class KitchendailydistributionController extends Controller
 {
@@ -98,6 +99,18 @@ class KitchendailydistributionController extends Controller
             $edit_kitchen_item = Kitchenitem::where('id', $kitchenitem->id)->update([
                 'current_quantity' => $after_quantity
             ]);
+
+            SectorKitchenItemTransaction::create([
+                'area_id' => $user->area_id,
+                'sector_id' => $user->sector_id,
+                'kitchenitem_id' => $kitchenitem->id, 
+                'kitchendailydistribution_id' => $kitchendailydistribution->id,
+                'in_out' => 0,
+                'date' => $date,
+                'before_quantity' => $before_quantity,
+                'after_quantity' => $after_quantity,
+                'transaction_quantity' => $total_distribution,
+            ]);
             
         }
 
@@ -116,6 +129,7 @@ class KitchendailydistributionController extends Controller
     public function destroy(Kitchendailydistribution $Kitchendailydistribution)
     {
         $kitchendailydistributionitems = Kitchendailydistributionitem::where('kitchendailydistribution_id', $Kitchendailydistribution->id)->get();
+        $sector_kitchen_item_transactions = SectorKitchenItemTransaction::where('kitchendailydistribution_id', $Kitchendailydistribution->id)->get();
         
         foreach($kitchendailydistributionitems as $kitchendailydistributionitem)
         {
@@ -131,6 +145,11 @@ class KitchendailydistributionController extends Controller
             ]);
 
             $kitchendailydistributionitem->delete();
+        }
+
+        foreach($sector_kitchen_item_transactions as $transaction)
+        {
+            $transaction->delete();
         }
 
         $Kitchendailydistribution->delete();

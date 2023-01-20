@@ -2,14 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use App\Models\Kitchenitem;
-use App\Models\TemporaryFile;
 use Illuminate\Http\Request;
-use App\Http\Requests\KitchenreceiptFormRequest;
+use App\Models\TemporaryFile;
 use App\Models\Kitchenreceipt;
 use App\Models\Kitchenreceiptitem;
-use App\Models\User;
 use Illuminate\Support\Facades\Storage;
+use App\Models\SectorKitchenItemTransaction;
+use App\Http\Requests\KitchenreceiptFormRequest;
 
 
 class KitchenreceiptController extends Controller
@@ -46,7 +47,11 @@ class KitchenreceiptController extends Controller
         }
         else
         {
-            return back();
+            $kitchenreceipt = Kitchenreceipt::create([
+                'area_id' => $user->area_id,
+                'sector_id' => $user->sector_id,
+                'date' => $request->date,
+            ]);
         }
 
         $kitchenitems = Kitchenitem::all();
@@ -59,15 +64,34 @@ class KitchenreceiptController extends Controller
                     'sector_id' => $user->sector_id,
                     'kitchenreceipt_id' => $kitchenreceipt->id,
                     'kitchenitem_id' => $item->id,
+                    'date' => $request->date,
+                    'before_quantity' => $item->current_quantity,
+                    'after_quantity' => $item->current_quantity + request('kitchenitem' . '_' . $item->id),
                     'quantity' => request('kitchenitem' . '_' . $item->id),
                 ]);
 
 
                 $selected_item = Kitchenitem::where('id', $item->id)->first();
 
+                $before_quantity = $selected_item->current_quantity;
+                $after_quantity = $selected_item->current_quantity + request('kitchenitem' . '_' . $item->id);
+
                 $selected_item->update([
-                    'current_quantity' => $selected_item->current_quantity + request('kitchenitem' . '_' . $item->id),
+                    'current_quantity' => $after_quantity,
                 ]);
+
+                SectorKitchenItemTransaction::create([
+                    'area_id' => $user->area_id,
+                    'sector_id' => $user->sector_id,
+                    'kitchenitem_id' => $item->id, 
+                    'kitchenreceipt_id' => $kitchenreceipt->id,
+                    'in_out' => 1,
+                    'date' => $request->date,
+                    'before_quantity' => $before_quantity,
+                    'after_quantity' => $after_quantity,
+                    'transaction_quantity' => request('kitchenitem' . '_' . $item->id),
+                ]);
+                
             }
         }
 
@@ -78,6 +102,8 @@ class KitchenreceiptController extends Controller
     public function destroy(Kitchenreceipt $kitchenreceipt)
     {
         $kitchenreceiptitems = Kitchenreceiptitem::where('kitchenreceipt_id', $kitchenreceipt->id)->get();
+        $sector_kitchen_item_transactions = SectorKitchenItemTransaction::where('kitchenreceipt_id', $kitchenreceipt->id)->get();
+
         foreach($kitchenreceiptitems as $kitchenreceiptitem)
         {
             $selected_kitchen_item = Kitchenitem::where('id', $kitchenreceiptitem->kitchenitem_id)->first();
@@ -86,6 +112,11 @@ class KitchenreceiptController extends Controller
                 'current_quantity' => $selected_kitchen_item->current_quantity - $kitchenreceiptitem->quantity,
             ]);
             $kitchenreceiptitem->delete();
+        }
+
+        foreach($sector_kitchen_item_transactions as $transaction)
+        {
+            $transaction->delete();
         }
 
         $kitchenreceipt->delete();

@@ -16,4 +16,9 @@ class Area extends Model
         return $this->hasMany(Sector::class);
     }
 
+    public function sector_kitchen_item_transactions()
+    {
+        return $this->hasMany(SectorKitchenItemTransaction::class);
+    }
+
 }

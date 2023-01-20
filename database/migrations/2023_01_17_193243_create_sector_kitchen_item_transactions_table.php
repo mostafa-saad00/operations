@@ -13,15 +13,23 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('kitchenreceipts', function (Blueprint $table) {
+        Schema::create('sector_kitchen_item_transactions', function (Blueprint $table) {
             $table->id();
 
             $table->unsignedInteger('area_id');
             $table->unsignedInteger('sector_id');
+            $table->unsignedInteger('kitchenitem_id');
 
-            $table->string('image_folder')->nullable();
-            $table->string('image_text')->nullable();
+            $table->unsignedInteger('kitchendailydistribution_id')->nullable();
+            $table->unsignedInteger('kitchenreceipt_id')->nullable();
+
+            $table->boolean('in_out');
+
             $table->date('date');
+
+            $table->float('before_quantity', 11, 3);
+            $table->float('after_quantity', 11, 3);
+            $table->float('transaction_quantity', 11, 3);
 
             $table->timestamps();
         });
@@ -34,6 +42,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('kitchenreceipts');
+        Schema::dropIfExists('sector_kitchen_item_transactions');
     }
 };

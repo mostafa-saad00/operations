@@ -313,6 +313,8 @@ Route::controller(KitchenReportsController::class)->middleware(['auth'])->group(
     Route::post('/kitchen-monthly-consumption-numbers/{user}', 'kitchen_monthly_consumption_numbers')->name('kitchen-monthly-consumption-numbers');
     Route::post('/kitchen-monthly-amdad-numbers/{user}', 'kitchen_monthly_amdad_numbers')->name('kitchen-monthly-amdad-numbers');
     Route::post('/kitchen-monthly-ta7sen-numbers/{user}', 'kitchen_monthly_ta7sen_numbers')->name('kitchen-monthly-ta7sen-numbers');
+    Route::post('/kitchen-items-quantity/{user}', 'kitchen_items_quantity')->name('kitchen-items-quantity');
+    Route::post('/kitchen-receipt-monthly/{user}', 'kitchen_receipt_monthly')->name('kitchen-receipt-monthly');
 });
 
 // End kitchen Reports

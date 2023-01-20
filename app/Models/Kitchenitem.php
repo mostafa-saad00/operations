@@ -31,4 +31,9 @@ class Kitchenitem extends Model
         return $this->hasMany(Kitchenitemtransaction::class);
     }
 
+    public function sector_kitchen_item_transactions()
+    {
+        return $this->hasMany(SectorKitchenItemTransaction::class);
+    }
+
 }

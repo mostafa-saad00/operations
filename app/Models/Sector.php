@@ -16,4 +16,9 @@ class Sector extends Model
         return $this->belongsTo(Area::class);
     }
 
+    public function sector_kitchen_item_transactions()
+    {
+        return $this->hasMany(SectorKitchenItemTransaction::class);
+    }
+
 }

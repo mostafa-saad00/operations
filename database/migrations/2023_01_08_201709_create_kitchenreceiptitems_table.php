@@ -21,6 +21,11 @@ return new class extends Migration
 
             $table->foreignId('kitchenreceipt_id')->constrained();
             $table->foreignId('kitchenitem_id')->constrained();
+
+            $table->date('date');
+            
+            $table->float('before_quantity', 11, 3);
+            $table->float('after_quantity', 11, 3);
             $table->float('quantity', 11, 3);
 
             $table->timestamps();

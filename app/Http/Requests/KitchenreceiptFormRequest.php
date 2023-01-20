@@ -24,7 +24,6 @@ class KitchenreceiptFormRequest extends FormRequest
     public function rules()
     {
         return [
-            'image' => ['required'],
             'date' => ['required'],
         ];
     }
@@ -32,7 +31,6 @@ class KitchenreceiptFormRequest extends FormRequest
     public function messages()
     {
         return [
-            'image.required' => 'صورة السند مطلوبة',
             'date.required' => 'حقل التاريخ مطلوب',
         ];
     }
